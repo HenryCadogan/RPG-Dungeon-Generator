@@ -51,7 +51,7 @@ public class GenerateWindow {
 				
 				try{
 				File htmlFile = new File ("Dungeon.html");
-				Desktop.getDesktop().browse(htmlFile.toURI());
+				Desktop.getDesktop().open(htmlFile);
 				}catch(IOException e){
 					System.err.println(e.getMessage());
 				}
