@@ -1,0 +1,6 @@
+package grammar
+
+
+interface  Rule {
+
+}

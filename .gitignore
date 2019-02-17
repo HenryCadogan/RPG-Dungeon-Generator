@@ -1,0 +1,11 @@
+#Java/IntelliJ files
+*.class
+*.log
+*.jar
+*.tar
+out/
+.idea
+#Output Files of creation
+RoomDescription.txt
+Dungeon.html
+Dungeon.png

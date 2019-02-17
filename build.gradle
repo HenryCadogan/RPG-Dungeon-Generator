@@ -1,0 +1,29 @@
+buildscript {
+    ext.kotlin_version = '1.3.10'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+println projectDir
+apply plugin: 'kotlin'
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile group: 'org.parboiled', name: 'parboiled-java', version: '1.3.0'
+    compile group: 'org.parboiled', name: 'parboiled-core', version: '1.3.0'
+}
+
+jar {
+    manifest { attributes 'Main-Class': 'generator.Dungeon' }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
