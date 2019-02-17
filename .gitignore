@@ -5,6 +5,7 @@
 *.tar
 out/
 .idea
+.gradle
 #Output Files of creation
 RoomDescription.txt
 Dungeon.html
