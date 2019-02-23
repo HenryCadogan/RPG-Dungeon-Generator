@@ -3,9 +3,14 @@
 *.log
 *.jar
 *.tar
+*.iml
 out/
 .idea
 .gradle
+build/
+gradle/
+gradlew
+gradlew.bat
 #Output Files of creation
 RoomDescription.txt
 Dungeon.html

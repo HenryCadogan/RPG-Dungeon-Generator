@@ -1,6 +1,6 @@
 package grammar
 
 
-interface  Rule {
+interface Rule {
 
 }

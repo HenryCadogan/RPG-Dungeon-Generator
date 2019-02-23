@@ -16,11 +16,13 @@ repositories {
     mavenCentral()
 }
 
+test{
+    useTestNG()
+}
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile group: 'org.parboiled', name: 'parboiled-java', version: '1.3.0'
-    compile group: 'org.parboiled', name: 'parboiled-core', version: '1.3.0'
+    testCompile group: 'org.testng', name: 'testng', version: '7.0.0-beta3'
 }
 
 jar {
