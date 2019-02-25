@@ -23,6 +23,7 @@ test{
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile group: 'org.testng', name: 'testng', version: '7.0.0-beta3'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
 }
 
 jar {
