@@ -1,7 +1,6 @@
 package grammar.grammarItems
 
 import generator.Monster
-import grammar.GrammarItem
 
 class DungeonRoom(
         terminal:Boolean = false

@@ -1,6 +1,6 @@
 package grammar.operators
 
-import grammar.GrammarItem
+import grammar.grammarItems.GrammarItem
 import kotlin.random.Random
 
 class OneOf(private val rnd:Random) {

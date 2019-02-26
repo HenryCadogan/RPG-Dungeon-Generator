@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
-import grammar.GrammarItem
+import grammar.grammarItems.GrammarItem
 import org.testng.Assert
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test

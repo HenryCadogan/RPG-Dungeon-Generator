@@ -2,6 +2,7 @@ package grammar
 
 import grammar.grammarItems.DungeonRoom
 import grammar.grammarItems.DungeonRoomFactory
+import grammar.grammarItems.GrammarItem
 import grammar.operators.GrammarOperators
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -20,7 +21,7 @@ data class GrammarRules(
 
 class Grammar(private val rules:GrammarRules) {
 
-    fun generate(grammarItems: MutableList<GrammarItem>): MutableList<GrammarItem> {
+    fun generate(grammarItems: List<GrammarItem>): MutableList<GrammarItem> {
         val outputItems = mutableListOf<GrammarItem>()
         var finished = false
         while (!finished) {
@@ -52,7 +53,7 @@ fun main(args: Array<String>) {
     ))
 
     val g = Grammar(rules)
-    val output = g.generate(mutableListOf(roomFactory.nonTerminal()))
+    val output = g.generate(listOf(roomFactory.nonTerminal()))
     print(output)
 }
 

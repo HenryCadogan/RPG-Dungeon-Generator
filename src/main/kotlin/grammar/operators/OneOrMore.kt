@@ -1,6 +1,6 @@
 package grammar.operators
 
-import grammar.GrammarItem
+import grammar.grammarItems.GrammarItem
 import kotlin.random.Random
 import kotlin.reflect.full.createInstance
 
