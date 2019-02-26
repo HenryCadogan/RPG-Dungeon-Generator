@@ -2,7 +2,6 @@ package grammar.operators
 
 import grammar.GrammarItem
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 class OneOf(private val rnd:Random) {
 

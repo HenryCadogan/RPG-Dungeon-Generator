@@ -11,11 +11,7 @@ import org.testng.annotations.Test
 import kotlin.random.Random
 
 
-class TestItem(terminal:Boolean = true): GrammarItem(terminal){
-    override fun generate():GrammarItem{
-        return TestItem(terminal)
-    }
-}
+class TestItem(terminal:Boolean = true): GrammarItem(terminal)
 
 class OneOfKtTest {
     private val rnd : Random = mock()
@@ -31,9 +27,12 @@ class OneOfKtTest {
         val itemA = TestItem()
         val itemB = TestItem()
         whenever(rnd.nextInt(any(),any())).thenReturn(1)
-            val result = ops.oneOf.oneOf(listOf(itemA,itemB))
+        val result1 = ops.oneOf.oneOf(listOf(itemA,itemB))
+        Assert.assertEquals(result1, itemA)
 
-        Assert.assertEquals(result, itemA)
+        whenever(rnd.nextInt(any(),any())).thenReturn(2)
+        val result = ops.oneOf.oneOf(listOf(itemA,itemB))
+        Assert.assertEquals(result, itemB)
     }
 
     @Test

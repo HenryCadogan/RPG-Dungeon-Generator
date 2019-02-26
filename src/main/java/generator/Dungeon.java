@@ -18,7 +18,6 @@ public class Dungeon {
 	int endY;
 	int width;
 	int height;
-	int minimum = 75;
 	int minRoomSize = 60;
 	Dungeon leftChild;
 	Dungeon rightChild;
@@ -93,7 +92,7 @@ public class Dungeon {
 	}
 	
 	void makeLeafs(Dungeon root){
-		dungeons = new ArrayList<Dungeon>();
+		dungeons = new ArrayList<>();
 	
 		dungeons.add(root);
 		
@@ -142,7 +141,7 @@ public class Dungeon {
 	}
 	
 	void drawDungeon(Dungeon root){
-		//For each element in the dungeons arraylist call generateRooms which will add a room for the leaves
+		//For each element in the dungeons array list call generateRooms which will add a room for the leaves
 		for (Dungeon r : dungeons){
 			if (r.room != null){
 				rooms.add(r.room);

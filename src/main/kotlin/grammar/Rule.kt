@@ -1,6 +1,0 @@
-package grammar
-
-
-interface Rule {
-
-}
