@@ -1,7 +1,8 @@
 package grammar
 
-import grammar.grammarItems.DungeonRoom
-import grammar.grammarItems.DungeonRoomFactory
+import grammar.grammarItems.rooms.DungeonRoom
+import grammar.grammarItems.rooms.DungeonRoomFactory
+import grammar.grammarItems.treasure.LockedTreasureItem
 import grammar.operators.GrammarOperators
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -11,7 +12,7 @@ object Constraints{
 }
 
 object Dungeon{
-    val items = listOf<GrammarItem>()
+    val rooms = listOf<GrammarItem>()
 }
 
 data class GrammarRules(
