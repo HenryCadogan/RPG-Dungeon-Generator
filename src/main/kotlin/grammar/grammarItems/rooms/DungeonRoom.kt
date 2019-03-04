@@ -1,6 +1,5 @@
 package grammar.grammarItems.rooms
 
-import generator.Monster
 import grammar.GrammarItem
 
 open class DungeonRoom(

@@ -7,13 +7,6 @@ import grammar.operators.GrammarOperators
 import kotlin.random.Random
 import kotlin.reflect.KClass
 
-object Constraints{
-
-}
-
-object Dungeon{
-    val rooms = listOf<GrammarItem>()
-}
 
 data class GrammarRules(
         val rules: List<ProductionRule>
@@ -32,6 +25,8 @@ class Grammar(private val rules:GrammarRules) {
                     val elementsToAdd = rule.rhs.invoke()
                     outputItems.addAll(elementsToAdd)
                     println("Adding $elementsToAdd")
+                }else{
+                    outputItems.add(grammarItems[x])
                 }
                 finished = grammarItems.any { !it.terminal }
             }
@@ -39,6 +34,9 @@ class Grammar(private val rules:GrammarRules) {
         return outputItems
     }
 }
+
+
+class RuleNotFoundException(clazz: KClass<out GrammarItem>):RuntimeException("Could not get a rule for $clazz")
 
 
 fun main(args: Array<String>) {
@@ -56,6 +54,3 @@ fun main(args: Array<String>) {
     val output = g.generate(mutableListOf(roomFactory.nonTerminal()))
     print(output)
 }
-
-
-class RuleNotFoundException(clazz: KClass<out GrammarItem>):RuntimeException("Could not get a rule for $clazz")

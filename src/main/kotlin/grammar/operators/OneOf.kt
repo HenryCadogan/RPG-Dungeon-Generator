@@ -3,14 +3,14 @@ package grammar.operators
 import grammar.GrammarItem
 import kotlin.random.Random
 
-class OneOf(private val rnd:Random) {
+class OneOf<T>(private val rnd:Random) {
 
-    fun oneOf(grammarItems: List<GrammarItem>): GrammarItem {
-        return oneOf(grammarItems.associate { it to 1 })
+    fun oneOf(items: List<T>): T {
+        return oneOf(items.associate { it to 1 })
     }
 
-    fun oneOf(grammarItems: Map<GrammarItem, Int>): GrammarItem {
-        val sortedItems = grammarItems.toList().sortedBy { (_, value) -> value }.toMap()
+    fun oneOf(items: Map<T, Int>): T {
+        val sortedItems = items.toList().sortedBy { (_, value) -> value }.toMap()
         val keys = sortedItems.keys.toList()
         val maxVal = sortedItems.values.toIntArray().sum()
         var pick = rnd.nextInt(1,maxVal)

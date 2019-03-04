@@ -1,10 +1,13 @@
 package grammar.grammarItems.rooms
 
-data class RoomObject (
-        val position: MapPosition
+open class RoomObject (
+        val position: MapPosition,
+        val name:String,
+        val description:String
 )
 
 data class MapPosition(
         val x:Int,
         val y:Int
 )
+
