@@ -1,2 +1,0 @@
-package grammar.grammarItems.treasure
-

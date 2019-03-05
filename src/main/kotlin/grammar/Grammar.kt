@@ -4,6 +4,7 @@ import grammar.grammarItems.rooms.DungeonRoom
 import grammar.grammarItems.rooms.DungeonRoomFactory
 import grammar.grammarItems.treasure.*
 import grammar.operators.GrammarOperators
+import grammar.operators.OneOf
 import java.awt.Container
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -43,6 +44,12 @@ class RuleNotFoundException(clazz: KClass<out GrammarItem>):RuntimeException("Co
 fun main(args: Array<String>) {
 
     val itemsFactory = ItemsFactory(Random)
-    println(itemsFactory.generateContainer(ItemSize.MEDIUM,CONTAINER.CHEST))
-    println(itemsFactory.generateWeapon(ItemSize.MEDIUM,WEAPON.AXE))
+
+    val ops = GrammarOperators(Random)
+
+    for (x in 1..10) {
+        val size = ops.oneOf.oneOf(ItemSize.values().toList())
+        val weaponType = ops.oneOf.oneOf(WEAPON.values().toList())
+        println(itemsFactory.generateWeapon(size, weaponType))
+    }
 }

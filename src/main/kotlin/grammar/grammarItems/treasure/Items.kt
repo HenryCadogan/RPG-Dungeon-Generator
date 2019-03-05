@@ -6,33 +6,24 @@ import grammar.operators.OneOf
 import kotlin.random.Random
 
 
-class ItemsFactory(rnd: Random){
+class ItemsFactory(private val rnd: Random){
     private val containersFile = this::class.java.getResource("/Items/containers.json")
     private val weaponsFile= this::class.java.getResource("/Items/weapons.json")
     private val mapper = jacksonObjectMapper().enable(
             MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
     private val containers = mapper.readValue(containersFile,Containers::class.java)
     private val weapons = mapper.readValue(weaponsFile,Weapons::class.java)
-    private val rnd = Random
 
-    fun generateWeapon(size:ItemSize?,type:WEAPON?): WeaponVariant {
-        val randType = OneOf(rnd).oneOf(WEAPON.values().toList())
-        val randSize = OneOf(rnd).oneOf(ItemSize.values().toList())
-        val typeToUse = type?:randType
-        val sizeToUse = size?:randSize
-        val items = weapons.weaponTypes.find{it.name == typeToUse}?: throw ItemTypeNotFoundException(type.toString())
-        val possibleWeapons = items.variants.filter { it.size == sizeToUse}
-        if (possibleWeapons.isEmpty()) throw ItemNotFoundException(sizeToUse,typeToUse.toString())
+    fun generateWeapon(size:ItemSize,type:WEAPON): WeaponVariant {
+        val items = weapons.weaponTypes.find{it.name == type}?: throw ItemTypeNotFoundException(type.toString())
+        val possibleWeapons = items.variants.filter { it.size == size}
+        if (possibleWeapons.isEmpty()) throw ItemNotFoundException(size,type.toString())
         return OneOf(rnd).oneOf(possibleWeapons)
     }
 
-    fun generateContainer(size:ItemSize?,type:CONTAINER?):ContainerVariant{
-        val randType = OneOf(rnd).oneOf(CONTAINER.values().toList())
-        val randSize = OneOf(rnd).oneOf(ItemSize.values().toList())
-        val typeToUse = type?:randType
-        val sizeToUse = size?:randSize
-        val items = containers.containerTypes.find{it.name == typeToUse}?: throw ItemTypeNotFoundException(type.toString())
-        val possibleContainers = items.variants.filter{ it.size == sizeToUse }
+    fun generateContainer(size:ItemSize,type:CONTAINER):ContainerVariant{
+        val items = containers.containerTypes.find{it.name == type}?: throw ItemTypeNotFoundException(type.toString())
+        val possibleContainers = items.variants.filter{ it.size == size}
         return OneOf(rnd).oneOf(possibleContainers)
     }
 }
