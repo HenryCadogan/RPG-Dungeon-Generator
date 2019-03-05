@@ -2,8 +2,9 @@ package grammar
 
 import grammar.grammarItems.rooms.DungeonRoom
 import grammar.grammarItems.rooms.DungeonRoomFactory
-import grammar.grammarItems.treasure.LockedTreasureItem
+import grammar.grammarItems.treasure.*
 import grammar.operators.GrammarOperators
+import java.awt.Container
 import kotlin.random.Random
 import kotlin.reflect.KClass
 
@@ -40,17 +41,8 @@ class RuleNotFoundException(clazz: KClass<out GrammarItem>):RuntimeException("Co
 
 
 fun main(args: Array<String>) {
-    val ops = GrammarOperators(Random)
 
-    val roomFactory = DungeonRoomFactory()
-
-    val a = {ops.oneOrMore.oneOrMore(roomFactory.terminal(),3,0.5f)}
-
-    val rules = GrammarRules(listOf(
-            ProductionRule(lhs = DungeonRoom::class, rhs= a )
-    ))
-
-    val g = Grammar(rules)
-    val output = g.generate(mutableListOf(roomFactory.nonTerminal()))
-    print(output)
+    val itemsFactory = ItemsFactory(Random)
+    println(itemsFactory.generateContainer(ItemSize.MEDIUM,CONTAINER.CHEST))
+    println(itemsFactory.generateWeapon(ItemSize.MEDIUM,WEAPON.AXE))
 }

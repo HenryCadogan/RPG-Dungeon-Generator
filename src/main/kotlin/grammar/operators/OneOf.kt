@@ -1,15 +1,16 @@
 package grammar.operators
 
-import grammar.GrammarItem
 import kotlin.random.Random
 
-class OneOf<T>(private val rnd:Random) {
 
-    fun oneOf(items: List<T>): T {
+class OneOf(private val rnd: Random) {
+
+    fun <T> oneOf(items: List<T>): T {
         return oneOf(items.associate { it to 1 })
     }
 
-    fun oneOf(items: Map<T, Int>): T {
+    fun <T> oneOf(items: Map<T, Int>): T {
+        if (items.size == 1) return items.keys.first()
         val sortedItems = items.toList().sortedBy { (_, value) -> value }.toMap()
         val keys = sortedItems.keys.toList()
         val maxVal = sortedItems.values.toIntArray().sum()
