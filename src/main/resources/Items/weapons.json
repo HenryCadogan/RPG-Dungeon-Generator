@@ -1,0 +1,56 @@
+{
+  "WeaponTypes": [
+    {
+      "name": "SWORD",
+      "variants": [
+        {
+          "name": "Small Dagger",
+          "value": 10,
+          "size": "SMALL",
+          "description": "A small rather blunt dagger.",
+          "damage": "2d6"
+        },
+        {
+          "name": "Shortsword",
+          "value": 30,
+          "size": "MEDIUM",
+          "description": "A moderate all round sword.",
+          "damage": "2d6"
+        },
+        {
+          "name": "Zweihander",
+          "value": 400,
+          "size": "LARGE",
+          "description": "A huge sword. Not for the faint of heart or those with low blood pressure.",
+          "damage": "2d6"
+        }
+      ]
+    },
+    {
+      "name": "AXE",
+      "variants": [
+        {
+          "name": "Small HandAxe",
+          "value": 10,
+          "size": "SMALL",
+          "description": "A small hand axe",
+          "damage": "2d6"
+        },
+        {
+          "name": "Lumber Axe",
+          "value": 30,
+          "size": "MEDIUM",
+          "description": "A medium siuzed axe for chopping Wood",
+          "damage": "2d6"
+        },
+        {
+          "name": "Zweihander",
+          "value": 400,
+          "size": "LARGE",
+          "description": "A huge sword. Not for the faint of heart or those with low blood pressure.",
+          "damage": "2d6"
+        }
+      ]
+    }
+  ]
+}

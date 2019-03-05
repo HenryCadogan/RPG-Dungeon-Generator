@@ -1,0 +1,33 @@
+
+{
+  "ContainerTypes":
+    [
+      {
+      "name": "CHEST",
+      "variants": [
+        {
+          "name": "Small pouch",
+          "minDC": 0,
+          "maxDC": 5,
+          "size" : "SMALL",
+          "description": "A small pouch, probably used to carry money"
+        },
+        {
+          "name": "Antique Chest",
+          "minDC": 10,
+          "maxDC": 18,
+          "size" : "MEDIUM",
+          "description": "A very old chest."
+        },
+        {
+          "name": "Strongbox",
+          "minDC": 14,
+          "maxDC": 12,
+          "size" : "LARGE",
+          "description": "A large sturdy chest."
+        }
+      ]
+    }
+  ]
+}
+

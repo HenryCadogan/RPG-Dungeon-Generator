@@ -1,14 +1,15 @@
-package grammar.grammarItems
+package grammar.grammarItems.rooms
 
 import generator.Monster
 
-class DungeonRoom(
+open class DungeonRoom(
         terminal:Boolean = false
 ) : GrammarItem(terminal){
-    private val position: Boolean = false
-    private val enemies: List<Monster> = emptyList()
+    lateinit var position: MapPosition
+    private val enemies= mutableListOf<Monster>()
     private val trapped:Boolean = false
     private val loot:Boolean = false
+    private val objects= mutableListOf<RoomObject>()
 }
 
 

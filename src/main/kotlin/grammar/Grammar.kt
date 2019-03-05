@@ -1,19 +1,20 @@
 package grammar
 
+<<<<<<< HEAD
 import grammar.grammarItems.DungeonRoom
 import grammar.grammarItems.DungeonRoomFactory
 import grammar.grammarItems.GrammarItem
+=======
+import grammar.grammarItems.rooms.DungeonRoom
+import grammar.grammarItems.rooms.DungeonRoomFactory
+import grammar.grammarItems.treasure.*
+>>>>>>> a488bd547116d9ed726abb15d36d84fed6fc6238
 import grammar.operators.GrammarOperators
+import grammar.operators.OneOf
+import java.awt.Container
 import kotlin.random.Random
 import kotlin.reflect.KClass
 
-object Constraints{
-
-}
-
-object Dungeon{
-    val items = listOf<GrammarItem>()
-}
 
 data class GrammarRules(
         val rules: List<ProductionRule>
@@ -32,6 +33,8 @@ class Grammar(private val rules:GrammarRules) {
                     val elementsToAdd = rule.rhs.invoke()
                     outputItems.addAll(elementsToAdd)
                     println("Adding $elementsToAdd")
+                }else{
+                    outputItems.add(grammarItems[x])
                 }
                 finished = grammarItems.any { !it.terminal }
             }
@@ -41,21 +44,25 @@ class Grammar(private val rules:GrammarRules) {
 }
 
 
+class RuleNotFoundException(clazz: KClass<out GrammarItem>):RuntimeException("Could not get a rule for $clazz")
+
+
 fun main(args: Array<String>) {
-    val ops = GrammarOperators(Random)
 
-    val roomFactory = DungeonRoomFactory()
-
-    val a = {ops.oneOrMore.oneOrMore(roomFactory.terminal(),3,0.5f)}
-
-    val rules = GrammarRules(listOf(
-            ProductionRule(lhs = DungeonRoom::class, rhs= a )
-    ))
-
+<<<<<<< HEAD
     val g = Grammar(rules)
     val output = g.generate(listOf(roomFactory.nonTerminal()))
     print(output)
 }
+=======
+    val itemsFactory = ItemsFactory(Random)
+>>>>>>> a488bd547116d9ed726abb15d36d84fed6fc6238
 
+    val ops = GrammarOperators(Random)
 
-class RuleNotFoundException(clazz: KClass<out GrammarItem>):RuntimeException("Could not get a rule for $clazz")
+    for (x in 1..10) {
+        val size = ops.oneOf.oneOf(ItemSize.values().toList())
+        val weaponType = ops.oneOf.oneOf(WEAPON.values().toList())
+        println(itemsFactory.generateWeapon(size, weaponType))
+    }
+}
