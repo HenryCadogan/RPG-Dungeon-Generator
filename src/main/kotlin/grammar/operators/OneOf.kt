@@ -1,9 +1,6 @@
 package grammar.operators
 
-<<<<<<< HEAD
 import grammar.grammarItems.GrammarItem
-=======
->>>>>>> a488bd547116d9ed726abb15d36d84fed6fc6238
 import kotlin.random.Random
 
 
@@ -18,7 +15,7 @@ class OneOf(private val rnd: Random) {
         val sortedItems = items.toList().sortedBy { (_, value) -> value }.toMap()
         val keys = sortedItems.keys.toList()
         val maxVal = sortedItems.values.toIntArray().sum()
-        var pick = rnd.nextInt(1,maxVal)
+        var pick = rnd.nextInt(1,maxVal+1)
         var current = 0
         for (item in keys) {
             pick -= sortedItems.getValue(item)

@@ -51,4 +51,13 @@ class OneOfKtTest {
         val result3 = ops.oneOf.oneOf(items)
         Assert.assertEquals(result3,itemB)
     }
+
+
+    @Test
+    fun `it should return the single element if only one is provided`(){
+        val itemA = TestItem(false)
+        whenever(rnd.nextInt(any(),any())).thenReturn(1)
+        val result = ops.oneOf.oneOf(listOf(itemA))
+        Assert.assertEquals(result,itemA)
+    }
 }

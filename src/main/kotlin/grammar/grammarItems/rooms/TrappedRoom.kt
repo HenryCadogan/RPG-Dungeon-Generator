@@ -2,5 +2,8 @@ package grammar.grammarItems.rooms
 
 import grammar.grammarItems.rooms.DungeonRoom
 
-class TrappedRoom(terminal:Boolean): DungeonRoom(terminal) {
+class TrappedRoom(terminal:Boolean = true): DungeonRoom(terminal) {
+
 }
+
+

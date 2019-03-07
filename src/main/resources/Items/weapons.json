@@ -5,24 +5,24 @@
       "variants": [
         {
           "name": "Small Dagger",
-          "value": 10,
+          "value": "3sp",
           "size": "SMALL",
           "description": "A small rather blunt dagger.",
           "damage": "2d6"
         },
         {
           "name": "Shortsword",
-          "value": 30,
+          "value": "5gp",
           "size": "MEDIUM",
           "description": "A moderate all round sword.",
           "damage": "2d6"
         },
         {
           "name": "Zweihander",
-          "value": 400,
+          "value": "3000gp",
           "size": "LARGE",
           "description": "A huge sword. Not for the faint of heart or those with low blood pressure.",
-          "damage": "2d6"
+          "damage": "8d12"
         }
       ]
     },
@@ -31,24 +31,24 @@
       "variants": [
         {
           "name": "Small HandAxe",
-          "value": 10,
+          "value": "10sp",
           "size": "SMALL",
           "description": "A small hand axe",
           "damage": "2d6"
         },
         {
           "name": "Lumber Axe",
-          "value": 30,
+          "value": "3gp",
           "size": "MEDIUM",
-          "description": "A medium siuzed axe for chopping Wood",
+          "description": "A medium sized axe for chopping Wood",
           "damage": "2d6"
         },
         {
-          "name": "Zweihander",
-          "value": 400,
+          "name": "Great BattleAxe Of Wounding",
+          "value": "400gp",
           "size": "LARGE",
-          "description": "A huge sword. Not for the faint of heart or those with low blood pressure.",
-          "damage": "2d6"
+          "description": "Big Choppy choppy stick",
+          "damage": "4d6 + 1d8 slashing damage"
         }
       ]
     }

@@ -72,7 +72,7 @@ data class WeaponType(
 
 data class WeaponVariant(
         val name: String,
-        val value:Int,
+        val value:String,
         val size:ItemSize,
         val damage:String,
         val description:String
