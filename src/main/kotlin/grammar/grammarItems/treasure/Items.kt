@@ -2,6 +2,7 @@ package grammar.grammarItems.treasure
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import grammar.grammarItems.GrammarItem
 import grammar.operators.OneOf
 import kotlin.random.Random
 
@@ -14,19 +15,26 @@ class ItemsFactory(private val rnd: Random){
     private val containers = mapper.readValue(containersFile,Containers::class.java)
     private val weapons = mapper.readValue(weaponsFile,Weapons::class.java)
 
-    fun generateWeapon(size:ItemSize,type:WEAPON): WeaponVariant {
+    fun generateWeapon(size:ItemSize,type:WEAPON): Item {
         val items = weapons.weaponTypes.find{it.name == type}?: throw ItemTypeNotFoundException(type.toString())
         val possibleWeapons = items.variants.filter { it.size == size}
         if (possibleWeapons.isEmpty()) throw ItemNotFoundException(size,type.toString())
-        return OneOf(rnd).oneOf(possibleWeapons)
+        val item = OneOf(rnd).oneOf(possibleWeapons).first()
+        return Item(itemType = ItemType.WEAPON,size = item.size,description = item.description)
     }
 
     fun generateContainer(size:ItemSize,type:CONTAINER):ContainerVariant{
         val items = containers.containerTypes.find{it.name == type}?: throw ItemTypeNotFoundException(type.toString())
         val possibleContainers = items.variants.filter{ it.size == size}
-        return OneOf(rnd).oneOf(possibleContainers)
+
+        return OneOf(rnd).oneOf(possibleContainers).first()
     }
 }
+data class Item(
+        val itemType: ItemType,
+        val size: ItemSize,
+        val description:String
+): GrammarItem(true)
 
 enum class CONTAINER{
     CHEST
@@ -35,6 +43,11 @@ enum class CONTAINER{
 enum class WEAPON{
     SWORD,
     AXE
+}
+
+enum class ItemType{
+    WEAPON,
+    CONTAINER
 }
 
 enum class ItemSize {
