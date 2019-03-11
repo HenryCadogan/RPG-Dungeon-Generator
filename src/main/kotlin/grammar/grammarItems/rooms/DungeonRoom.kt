@@ -2,61 +2,32 @@ package grammar.grammarItems.rooms
 
 import generator.Monster
 import grammar.grammarItems.GrammarItem
-import grammar.grammarItems.GrammarItemGenerator
-import grammar.grammarItems.treasure.Item
-import grammar.grammarItems.treasure.ItemSize
-import grammar.grammarItems.treasure.ItemsFactory
-import kotlin.random.Random
+import grammar.grammarItems.GrammarItemFactory
+import grammar.grammarItems.treasure.*
 
 open class DungeonRoom(
         terminal: Boolean = false
 ) : GrammarItem(terminal) {
     lateinit var position: MapPosition
+    lateinit var size: RoomSize
     private val roomEnemies = mutableListOf<Monster>()
     var trapped: Boolean = false
-    private val roomObjects = mutableListOf<RoomObject>()
-    private val looseItems= mutableListOf<Item>()
+    var roomObjects = listOf<GrammarItem>()
     open var description: String = "A room"
 
     fun isTrapped() = trapped
-
-
-    fun addEnemies(monsters: List<Monster>) {
-        roomEnemies.addAll(monsters)
-    }
-
-    fun addObjects(objects: List<RoomObject>) {
-        roomObjects.addAll(objects)
-    }
-
-    fun addLootIntoObjects(loot: List<Item>) {
-        loot.forEach { li ->
-            var placed = false
-            roomObjects.forEach { ro ->
-                if (!ro.isFull()) {
-                    if (canFit(li, ro)) {
-                        ro.addContents(li)
-                        placed = true
-                    }
-                }
-            }
-            if (!placed){looseItems.add(li)}
-        }
-    }
-
-    private fun canFit(item: Item, roomObject: RoomObject): Boolean {
-        return when (roomObject.size) {
-            ItemSize.SMALL -> item.size == ItemSize.SMALL
-            ItemSize.MEDIUM -> item.size in listOf(ItemSize.MEDIUM, ItemSize.SMALL)
-            ItemSize.LARGE -> item.size in listOf(ItemSize.LARGE, ItemSize.MEDIUM, ItemSize.SMALL)
-        }
-    }
 }
 
+data class RoomSize(
+        val x:Int,
+        val y:Int
+)
+data class MapPosition(
+        val x:Int,
+        val y:Int
+)
 
-class DungeonRoomGenerator : GrammarItemGenerator {
-
-    //todo use objects to determine placement of room and generate some contents.
+class DungeonRoomFactory : GrammarItemFactory {
 
     override fun nonTerminal(): GrammarItem {
         return DungeonRoom(false)
@@ -65,6 +36,19 @@ class DungeonRoomGenerator : GrammarItemGenerator {
     override fun terminal(): GrammarItem {
         return DungeonRoom(true)
     }
+
+    fun determineRoomPlacement(){
+
+    }
+
+    fun entranceRoomToDungeon():DungeonRoom{
+        val room = DungeonRoom(
+                terminal = true
+        )
+        room.description = "The starting room for this adventure"
+        return room
+    }
+
 
 }
 

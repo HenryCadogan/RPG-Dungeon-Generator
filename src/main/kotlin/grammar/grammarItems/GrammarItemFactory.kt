@@ -1,6 +1,6 @@
 package grammar.grammarItems
 
-interface GrammarItemGenerator {
+interface GrammarItemFactory {
     fun terminal():GrammarItem
     fun nonTerminal():GrammarItem
 }

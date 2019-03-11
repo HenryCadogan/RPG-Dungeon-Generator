@@ -15,32 +15,36 @@ class ItemsFactory(private val rnd: Random){
     private val containers = mapper.readValue(containersFile,Containers::class.java)
     private val weapons = mapper.readValue(weaponsFile,Weapons::class.java)
 
-    fun generateWeapon(size:ItemSize,type:WEAPON): Item {
+    fun generateWeapon(size:ItemSize,type:WeaponCategory): Item {
         val items = weapons.weaponTypes.find{it.name == type}?: throw ItemTypeNotFoundException(type.toString())
         val possibleWeapons = items.variants.filter { it.size == size}
         if (possibleWeapons.isEmpty()) throw ItemNotFoundException(size,type.toString())
-        val item = OneOf(rnd).oneOf(possibleWeapons).first()
-        return Item(itemType = ItemType.WEAPON,size = item.size,description = item.description)
+        return Weapon(OneOf(rnd).oneOf(possibleWeapons).first())
     }
 
-    fun generateContainer(size:ItemSize,type:CONTAINER):ContainerVariant{
+    fun generateContainer(size:ItemSize,type:ContainerCategory): Item {
         val items = containers.containerTypes.find{it.name == type}?: throw ItemTypeNotFoundException(type.toString())
         val possibleContainers = items.variants.filter{ it.size == size}
-
-        return OneOf(rnd).oneOf(possibleContainers).first()
+        return Container(OneOf(rnd).oneOf(possibleContainers).first())
     }
 }
-data class Item(
+
+data class Container(val data :Any):Item(ItemType.CONTAINER,data)
+data class Weapon(val data :Any):Item(ItemType.WEAPON,data)
+
+class ItemPlaceholder:GrammarItem(false)
+
+open class Item(
         val itemType: ItemType,
-        val size: ItemSize,
-        val description:String
+        val variantData:Any
 ): GrammarItem(true)
 
-enum class CONTAINER{
+
+enum class ContainerCategory{
     CHEST
 }
 
-enum class WEAPON{
+enum class WeaponCategory{
     SWORD,
     AXE
 }
@@ -61,7 +65,7 @@ data class Containers(
 )
 
 data class ContainerType(
-        val name: CONTAINER,
+        val name: ContainerCategory,
         val variants: List<ContainerVariant>
 )
 
@@ -79,7 +83,7 @@ data class Weapons(
 )
 
 data class WeaponType(
-        val name: WEAPON,
+        val name: WeaponCategory,
         val variants: List<WeaponVariant>
 )
 
