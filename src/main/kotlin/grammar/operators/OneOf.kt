@@ -1,5 +1,6 @@
 package grammar.operators
 
+import grammar.grammarItems.GrammarItem
 import kotlin.random.Random
 
 
@@ -22,4 +23,11 @@ class OneOf(private val rnd: Random) {
         }
         return listOf(keys[current])
     }
+}
+
+infix fun GrammarItem.or(item:GrammarItem):List<GrammarItem>{
+    return OneOf(Random).oneOf(listOf(this, item))
+}
+infix fun List<GrammarItem>.or(item:List<GrammarItem>):List<GrammarItem>{
+    return OneOf(Random).oneOf(listOf(this, item)).flatten()
 }

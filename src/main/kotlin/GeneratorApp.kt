@@ -1,8 +1,8 @@
 
+import grammar.Constraints
+import grammar.grammarItems.enemies.Theme
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
-import javafx.scene.input.MouseEvent
-
 import tornadofx.*
 
 
@@ -16,11 +16,9 @@ class MainMenu:View(){
     private val roomCount = model.bind{SimpleStringProperty()}
     private val dungeonTheme = model.bind{SimpleStringProperty()}
     private val myController: MyController by inject()
-
-
     override val root = form {
 
-        combobox(values= listOf(""))
+        combobox(values= myController.themes)
         fieldset(labelPosition = Orientation.VERTICAL) {
             field("Max Number of rooms") {
                 textfield(roomCount)
@@ -32,21 +30,22 @@ class MainMenu:View(){
             useMaxHeight=true
             action{
                 runAsyncWithProgress {
-                    myController.generateMap()
+                    myController.generateMap(model)
                 }
             }
         }
     }
-
 }
 
 class MyController:Controller(){
+    val constraints = Constraints
+    val themes = Theme.values().toList()
 
-    fun generateMap(){
+
+
+    fun generateMap(model:ViewModel){
 
     }
-
-
 }
 
 fun main() {

@@ -14,6 +14,7 @@ class OneOrMore(private val rnd: Random) {
                 output.add(clazz.createInstance())
             }
         }
+        if (output.isEmpty()){output.add(item)}
         return output
     }
 }

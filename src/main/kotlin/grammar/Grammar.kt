@@ -3,11 +3,15 @@ package grammar
 import grammar.grammarItems.and
 import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.StartItem
+import grammar.grammarItems.enemies.Enemy
+import grammar.grammarItems.enemies.EnemyFactory
+import grammar.grammarItems.enemies.EnemyPlaceholder
 import grammar.grammarItems.rooms.DungeonRoom
 import grammar.grammarItems.rooms.DungeonRoomFactory
 import grammar.grammarItems.rooms.TrappedRoomFactory
 import grammar.grammarItems.treasure.*
 import grammar.operators.GrammarOperators
+import grammar.operators.or
 import kotlin.random.Random
 import kotlin.reflect.KClass
 
@@ -45,28 +49,31 @@ fun main(args: Array<String>) {
     println("Starting")
     val rnd = Random
     val ops = GrammarOperators(rnd)
-    val constraints = Constraints
-
+    val const = Constraints
     val roomGen = DungeonRoomFactory()
     val trappedRoomGen = TrappedRoomFactory()
     val itemGen = ItemsFactory(rnd)
-
-    constraints.maxRoomCount = 20
-    constraints.roomSparsity = 0.5f
-    constraints.trapPercentage = 20
+    val enemyFactory = EnemyFactory(const.rooms.theme)
+    const.rooms.maxRoomCount = 20
+    const.rooms.roomSparsity = 0.5f
+    const.rooms.trappedRoomPercentage = 20
+    const.enemies.maxEnemiesPerRoom = 5
+    const.enemies.enemySparcity = 0.2f
     val roomRules = listOf(
             ProductionRule(
                     lhs = DungeonRoom::class,
                     rhs = {
                         ops.oneOf.oneOf(mapOf(
-                                roomGen.terminal() to 100 -constraints.trapPercentage ,
-                                trappedRoomGen.terminal() to constraints.trapPercentage
+                                roomGen.terminal() to 100 - const.rooms.trappedRoomPercentage,
+                                trappedRoomGen.terminal() to const.rooms.trappedRoomPercentage
                         ))
                     }
             ),
             ProductionRule(
                     lhs = StartItem::class,
-                    rhs = { roomGen.entranceRoomToDungeon() and ops.oneOrMore.oneOrMore(roomGen.nonTerminal(),constraints.maxRoomCount, constraints.roomSparsity)
+                    rhs = {
+                        roomGen.entranceRoomToDungeon() and ops.oneOrMore.oneOrMore(
+                                roomGen.nonTerminal(), const.rooms.maxRoomCount, const.rooms.roomSparsity)
                     }
             )
     )
@@ -74,41 +81,72 @@ fun main(args: Array<String>) {
     val itemRules = listOf(
             ProductionRule(
                     lhs = ItemPlaceholder::class,
-                    rhs = { ops.oneOf.oneOf(listOf(
-                            itemGen.generateContainer(ops.oneOf.oneOf(ItemSize.values().toList()).first(), ContainerCategory.CHEST))
-                    )
+                    rhs = {
+                        ops.oneOf.oneOf(
+                                listOf(
+                                        itemGen.generateContainer(
+                                                ops.oneOf.oneOf(ItemSize.values().toList()).first(),
+                                                ContainerCategory.CHEST)
+                                ) or listOf(
+                                        itemGen.generateWeapon(
+                                                ops.oneOf.oneOf(ItemSize.values().toList()).first(),
+                                                ops.oneOf.oneOf(WeaponCategory.values().toList()).first())
+
+                                )
+                        )
+                    }
+            )
+    )
+
+    val enemyRules = listOf(
+            ProductionRule(
+                    lhs = EnemyPlaceholder::class,
+                    rhs = {
+                        ops.oneOrMore.oneOrMore(
+                                item = (enemyFactory.terminal() or enemyFactory.nonTerminal()).first(),
+                                limit = const.enemies.maxEnemiesPerRoom,
+                                probability = const.enemies.enemySparcity
+                        )
+                    }
+            ),
+            ProductionRule(
+                    lhs = Enemy::class,
+                    rhs = {
+                        listOf(enemyFactory.terminal())
                     }
             )
     )
 
 
     val roomGrammar = Grammar(roomRules)
+    val itemGrammar = Grammar(itemRules)
+    val enemyGrammar = Grammar(enemyRules)
     val dungeon = roomGrammar.generate(listOf(StartItem()))
 
-    val itemGrammar = Grammar(itemRules)
 
     println("Components are")
-    for (d in dungeon){
-        if (d is DungeonRoom){
+    for (d in dungeon) {
+        if (d is DungeonRoom) {
             println("${d::class.simpleName}: ${d.description}")
             d.roomObjects = itemGrammar.generate(listOf(ItemPlaceholder()))
-            val roomItems= mutableListOf<String>()
-            for (o in d.roomObjects){
+            val roomItems = mutableListOf<String>()
+            for (o in d.roomObjects) {
                 if (o is Item)
-                    if  (o.variantData is WeaponVariant){
+                    if (o.variantData is WeaponVariant) {
                         roomItems.add(o.variantData.name)
-                    } else if (o.variantData is ContainerVariant){
+                    } else if (o.variantData is ContainerVariant) {
                         roomItems.add(o.variantData.name)
                     }
             }
-            roomItems.forEach{
+            d.roomEnemies = enemyGrammar.generate(listOf(EnemyPlaceholder()))
+            d.roomEnemies.forEach {it as Enemy
+                println("   Enemies: ${it.data.name}")
+            }
+            roomItems.forEach {
                 println("           Items: $it")
             }
-
-
         }
     }
-
 }
 
 

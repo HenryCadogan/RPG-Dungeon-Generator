@@ -9,7 +9,9 @@ import java.util.ArrayList;
  */
 
 public class Bestiary {
-	
+	public Bestiary(){
+		addMonsterThemes();
+	}
 	Monster kuotoa = new Monster("Kuo-Toa", "Bite", "1d4 + 1", "Spear", "1d6 + 1/1d8 + 1 (2h)", 0.25, 18, 3, 13, 199);
 	Monster merfolk = new Monster("Merfolk", "Spear", "1d6/1d8(2h)", 0.125, 11, 2, 11, 218);
     Monster sahuagin = new Monster("Sahuagin", "Bite/Claws", "1d4 + 1", "Spear", "1d6 + 1/1d8 + 1 (2h)", 0.5, 22, 3, 12, 263);
