@@ -10,7 +10,11 @@ import grammar.grammarItems.rooms.DungeonRoom
 import grammar.grammarItems.rooms.DungeonRoomFactory
 import grammar.grammarItems.rooms.TrappedRoomFactory
 import grammar.grammarItems.treasure.*
+import grammar.grammarItems.treasure.items.*
+import grammar.grammarItems.treasure.money.Money
 import grammar.operators.GrammarOperators
+import grammar.operators.oneOf
+import grammar.operators.oneOrMore
 import grammar.operators.or
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -50,15 +54,16 @@ fun main(args: Array<String>) {
     val rnd = Random
     val ops = GrammarOperators(rnd)
     val const = Constraints
-    val roomGen = DungeonRoomFactory()
     val trappedRoomGen = TrappedRoomFactory()
     val itemGen = ItemsFactory(rnd)
-    val enemyFactory = EnemyFactory(const.rooms.theme)
+    val enemyFactory = EnemyFactory(const.theme)
+    val roomGen = DungeonRoomFactory(const.theme)
     const.rooms.maxRoomCount = 20
     const.rooms.roomSparsity = 0.5f
     const.rooms.trappedRoomPercentage = 20
     const.enemies.maxEnemiesPerRoom = 5
     const.enemies.enemySparcity = 0.2f
+
     val roomRules = listOf(
             ProductionRule(
                     lhs = DungeonRoom::class,
@@ -82,18 +87,13 @@ fun main(args: Array<String>) {
             ProductionRule(
                     lhs = ItemPlaceholder::class,
                     rhs = {
-                        ops.oneOf.oneOf(
-                                listOf(
-                                        itemGen.generateContainer(
-                                                ops.oneOf.oneOf(ItemSize.values().toList()).first(),
-                                                ContainerCategory.CHEST)
-                                ) or listOf(
-                                        itemGen.generateWeapon(
-                                                ops.oneOf.oneOf(ItemSize.values().toList()).first(),
-                                                ops.oneOf.oneOf(WeaponCategory.values().toList()).first())
-
+                        itemGen.generateContainer(
+                                size = ItemSize.values().toList().oneOf(),
+                                type = ContainerCategory.CHEST) /*.oneOrMore(2)*/ or
+                                itemGen.generateWeapon(
+                                        size = ItemSize.SMALL,
+                                        type = WeaponCategory.WAND
                                 )
-                        )
                     }
             )
     )
@@ -112,7 +112,22 @@ fun main(args: Array<String>) {
             ProductionRule(
                     lhs = Enemy::class,
                     rhs = {
-                        listOf(enemyFactory.terminal())
+                        listOf(enemyFactory.terminal()) or emptyList()
+                    }
+            )
+    )
+
+    val lootRules = listOf(
+            ProductionRule(
+                    lhs = TreasurePlaceholder::class,
+                    rhs = {
+                        ((Money.lowValue() and MiscItemPlaceholder()) or (ops.oneOrMore.oneOrMore(MiscItemPlaceholder(), 3, 70f)) or emptyList())
+                    }
+            ),
+            ProductionRule(
+                    lhs = MiscItemPlaceholder::class,
+                    rhs = {
+                        (itemGen.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or emptyList() or Money.moderateValue())
                     }
             )
     )
@@ -121,32 +136,63 @@ fun main(args: Array<String>) {
     val roomGrammar = Grammar(roomRules)
     val itemGrammar = Grammar(itemRules)
     val enemyGrammar = Grammar(enemyRules)
-    val dungeon = roomGrammar.generate(listOf(StartItem()))
-
+    val lootGrammar = Grammar(lootRules)
+    Dungeon.rooms = roomGrammar.generate(listOf(StartItem())).toMutableList()
 
     println("Components are")
-    for (d in dungeon) {
+    for (d in Dungeon.rooms) {
         if (d is DungeonRoom) {
-            println("${d::class.simpleName}: ${d.description}")
+            println(d.description)
             d.roomObjects = itemGrammar.generate(listOf(ItemPlaceholder()))
-            val roomItems = mutableListOf<String>()
+            val roomItems = mutableListOf<Item>()
             for (o in d.roomObjects) {
                 if (o is Item)
-                    if (o.variantData is WeaponVariant) {
-                        roomItems.add(o.variantData.name)
-                    } else if (o.variantData is ContainerVariant) {
-                        roomItems.add(o.variantData.name)
+                    when {
+                        o.variantData is WeaponVariant ||
+                                o.variantData is ContainerVariant ||
+                                o.variantData is MiscItemVariant
+                        -> roomItems.add(o)
                     }
             }
             d.roomEnemies = enemyGrammar.generate(listOf(EnemyPlaceholder()))
-            d.roomEnemies.forEach {it as Enemy
-                println("   Enemies: ${it.data.name}")
+            println("   Enemies: ")
+            d.roomEnemies.forEach {
+                it as Enemy
+                println("       ${it.data.name}")
             }
-            roomItems.forEach {
-                println("           Items: $it")
+            if (roomItems.isNotEmpty()) {
+                println("   Items:")
+                roomItems.forEach {
+                    when (it) {
+                        is Weapon -> println("      ${it.name}")
+                        is Container -> {
+                            it.contents = lootGrammar.generate(it.contents)
+                            val name = it.data.name
+                            if (!it.contents.isEmpty()) {
+                                println("       $name")
+
+                                val items = it.contents.map { i ->
+                                    when (i) {
+                                        is Item -> i.name
+                                        is Money -> i.toString()
+                                        else -> ""
+                                    }
+                                }
+                                println("           Containing: $items")
+                            } else {
+                                println("       An empty $name")
+                            }
+                        }
+                    }
+                }
             }
         }
     }
+
+
+    //todo make function to write out description of something
+
+
 }
 
 

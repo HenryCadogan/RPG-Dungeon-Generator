@@ -5,21 +5,38 @@
       "variants": [
         {
           "name": "Small Dagger",
-          "value": "3sp",
+          "value": {
+              "platinum": 0,
+              "gold": 0,
+              "silver": 50,
+              "copper": 20
+          },
           "size": "SMALL",
           "description": "A small rather blunt dagger.",
           "damage": "2d6"
         },
         {
           "name": "Shortsword",
-          "value": "5gp",
+          "value": {
+              "platinum": 0,
+              "gold": 5,
+              "silver": 0,
+              "copper": 0
+          },
           "size": "MEDIUM",
           "description": "A moderate all round sword.",
           "damage": "2d6"
         },
         {
           "name": "Zweihander",
-          "value": "3000gp",
+          "value": {
+
+              "platinum": 3,
+              "gold": 200,
+              "silver": 50,
+              "copper": 20
+
+          },
           "size": "LARGE",
           "description": "A huge sword. Not for the faint of heart or those with low blood pressure.",
           "damage": "8d12"
@@ -31,24 +48,64 @@
       "variants": [
         {
           "name": "Small HandAxe",
-          "value": "10sp",
+          "value": {
+
+              "platinum": 0,
+              "gold": 2,
+              "silver": 0,
+              "copper": 0
+
+          },
           "size": "SMALL",
           "description": "A small hand axe",
           "damage": "2d6"
         },
         {
           "name": "Lumber Axe",
-          "value": "3gp",
+          "value": {
+
+              "platinum": 0,
+              "gold": 0,
+              "silver": 50,
+              "copper": 20
+
+          },
           "size": "MEDIUM",
           "description": "A medium sized axe for chopping Wood",
           "damage": "2d6"
         },
         {
           "name": "Great BattleAxe Of Wounding",
-          "value": "400gp",
+          "value": {
+
+              "platinum": 0,
+              "gold": 50,
+              "silver": 0,
+              "copper": 0
+
+          },
           "size": "LARGE",
           "description": "Big Choppy choppy stick",
           "damage": "4d6 + 1d8 slashing damage"
+        }
+      ]
+    },
+    {
+      "name": "WAND",
+      "variants": [
+        {
+          "name": "Wand Of magic missiles",
+          "value": {
+
+              "platinum": 0,
+              "gold": 20,
+              "silver": 50,
+              "copper": 20
+
+          },
+          "size": "SMALL",
+          "description": "This wand has 7 Charges. While holding it, you can use an action to expend 1 or more of its Charges to cast the Magic Missile spell from it. For 1 charge, you cast the 1st-level version of the spell. You can increase the spell slot level by one for each additional charge you expend.\n\nThe wand regains 1d6 + 1 expended Charges daily at dawn. If you expend the wand's last charge, roll a d20. On a 1, the wand crumbles into ashes and is destroyed.",
+          "damage": "Depends on class/level/charge"
         }
       ]
     }

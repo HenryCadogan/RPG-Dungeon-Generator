@@ -1,0 +1,61 @@
+
+{
+  "MiscItemTypes":
+  [
+    {
+      "name": "POTION",
+      "variants": [
+        {
+          "name": "Potion Of Lesser Healing",
+          "size" : "SMALL",
+          "description": "A Small potion that heals for 2d4 + Constitution modifier",
+          "value": {
+            "platinum": 0,
+            "gold": 0,
+            "silver": 50,
+            "copper": 20
+          }
+        },
+        {
+          "name": "Small vial of poison",
+          "size" : "SMALL",
+          "description": "You can't tell what it is but you really do not want to drink it",
+          "value": {
+            "platinum": 0,
+            "gold": 0,
+            "silver": 50,
+            "copper": 20
+          }
+        }
+      ]
+    },
+    {
+      "name": "SPELLSCROLL",
+      "variants": [
+        {
+          "name": "Scroll of Firebolt",
+          "size" : "SMALL",
+          "description": "You hurl a small flame at a creature or object, making a ranged spell attack. The target takes 1d10 fire damage on hit. The fire ignites any flammable object hit by it that isn't being worn or carried",
+          "value": {
+            "platinum": 0,
+            "gold": 0,
+            "silver": 50,
+            "copper": 20
+          }
+        },
+        {
+          "name": "Scroll of Burning Hands",
+          "size" : "Small",
+          "description": "Flames shoot from your fingers in a 15-foot cone. Any creature in range must pass a Dexterity save or take 3d6 fire damage. They take half as much on a success.\n\nFlammable objects are also ignited if they are in range and aren't worn or carried.",
+          "value": {
+            "platinum": 0,
+            "gold": 0,
+            "silver": 50,
+            "copper": 20
+          }
+        }
+      ]
+    }
+  ]
+}
+
