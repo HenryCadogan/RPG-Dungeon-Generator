@@ -7,7 +7,7 @@ import grammar.grammarItems.GrammarItemFactory
 import grammar.operators.OneOf
 import kotlin.random.Random
 
-class Enemy(terminal:Boolean = false): GrammarItem(terminal){
+open class Enemy(terminal:Boolean = false): GrammarItem(terminal){
     lateinit var data:Monster
 }
 

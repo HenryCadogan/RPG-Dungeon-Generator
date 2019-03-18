@@ -4,3 +4,5 @@ interface GrammarItemFactory {
     fun terminal():GrammarItem
     fun nonTerminal():GrammarItem
 }
+
+interface Placeholder

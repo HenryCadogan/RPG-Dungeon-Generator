@@ -1,10 +1,8 @@
 package grammar.grammarItems.treasure.items
 
-import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.treasure.ItemSize
 import grammar.grammarItems.treasure.money.Money
 
-class MiscItemPlaceholder: GrammarItem(false)
 
 enum class MiscItemCategory {
     POTION,

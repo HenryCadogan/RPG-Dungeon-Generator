@@ -1,11 +1,8 @@
 package grammar.grammarItems.rooms
 
-import generator.Monster
 import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.GrammarItemFactory
-import grammar.grammarItems.enemies.Enemy
 import grammar.grammarItems.enemies.Theme
-import grammar.grammarItems.treasure.*
 
 open class DungeonRoom(
         terminal: Boolean = false

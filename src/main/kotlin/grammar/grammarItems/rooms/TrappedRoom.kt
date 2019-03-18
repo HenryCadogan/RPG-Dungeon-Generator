@@ -3,7 +3,7 @@ package grammar.grammarItems.rooms
 import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.GrammarItemFactory
 
-class TrappedRoom(terminal:Boolean = true): DungeonRoom(terminal){
+open class TrappedRoom(terminal:Boolean = true): DungeonRoom(terminal){
     override var description = "A trapped room"
 }
 

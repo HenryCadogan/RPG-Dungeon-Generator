@@ -11,6 +11,35 @@ data class Money(
         val silver: Int,
         val copper: Int
 ): GrammarItem(true) {
+
+    fun add(other:Money):Money{
+        return Money(
+                platinum = this.platinum + other.platinum,
+                gold = this.gold + other.gold,
+                silver = this.silver + other.silver,
+                copper = this.copper + other.copper
+        )
+    }
+
+    fun toPrettyString(): String {
+        val sb = StringBuilder()
+
+        if (this.platinum != 0) {
+            sb.append("${this.platinum}PP,")
+        }
+        if (this.gold != 0) {
+            sb.append("${this.gold}GP,")
+        }
+        if (this.silver != 0) {
+            sb.append("${this.silver}SP,")
+        }
+        if (this.copper != 0) {
+            sb.append("${this.copper}CP")
+        }
+        sb.removeSurrounding(",")
+        return sb.toString()
+    }
+
     companion object {
         private val r = Random
         private val oneOf = OneOf(r)
@@ -53,12 +82,5 @@ data class Money(
         private fun pickFrom(intList:List<Int>) = oneOf.oneOf(intList).first()
     }
 
-    fun Money.add(other:Money):Money{
-        return Money(
-                platinum = this.platinum + other.platinum,
-                gold = this.gold + other.gold,
-                silver = this.silver + other.silver,
-                copper = this.copper + other.copper
-        )
-    }
+
 }

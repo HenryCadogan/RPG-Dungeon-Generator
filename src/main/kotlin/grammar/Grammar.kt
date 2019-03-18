@@ -1,5 +1,9 @@
 package grammar
 
+import grammar.Factories.enemyFactory
+import grammar.Factories.itemFactory
+import grammar.Factories.roomFactory
+import grammar.Factories.trappedRoomFactory
 import grammar.grammarItems.and
 import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.StartItem
@@ -14,7 +18,6 @@ import grammar.grammarItems.treasure.items.*
 import grammar.grammarItems.treasure.money.Money
 import grammar.operators.GrammarOperators
 import grammar.operators.oneOf
-import grammar.operators.oneOrMore
 import grammar.operators.or
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -54,10 +57,12 @@ fun main(args: Array<String>) {
     val rnd = Random
     val ops = GrammarOperators(rnd)
     val const = Constraints
-    val trappedRoomGen = TrappedRoomFactory()
-    val itemGen = ItemsFactory(rnd)
-    val enemyFactory = EnemyFactory(const.theme)
-    val roomGen = DungeonRoomFactory(const.theme)
+
+    Factories.enemyFactory = EnemyFactory(const.theme)
+    Factories.itemFactory = ItemsFactory(rnd)
+    Factories.trappedRoomFactory = TrappedRoomFactory()
+    Factories.roomFactory = DungeonRoomFactory(const.theme)
+
     const.rooms.maxRoomCount = 20
     const.rooms.roomSparsity = 0.5f
     const.rooms.trappedRoomPercentage = 20
@@ -69,16 +74,16 @@ fun main(args: Array<String>) {
                     lhs = DungeonRoom::class,
                     rhs = {
                         ops.oneOf.oneOf(mapOf(
-                                roomGen.terminal() to 100 - const.rooms.trappedRoomPercentage,
-                                trappedRoomGen.terminal() to const.rooms.trappedRoomPercentage
+                                roomFactory.terminal() to 100 - const.rooms.trappedRoomPercentage,
+                                trappedRoomFactory.terminal() to const.rooms.trappedRoomPercentage
                         ))
                     }
             ),
             ProductionRule(
                     lhs = StartItem::class,
                     rhs = {
-                        roomGen.entranceRoomToDungeon() and ops.oneOrMore.oneOrMore(
-                                roomGen.nonTerminal(), const.rooms.maxRoomCount, const.rooms.roomSparsity)
+                        roomFactory.entranceRoomToDungeon() and ops.oneOrMore.oneOrMore(
+                                roomFactory.nonTerminal(), const.rooms.maxRoomCount, const.rooms.roomSparsity)
                     }
             )
     )
@@ -87,10 +92,10 @@ fun main(args: Array<String>) {
             ProductionRule(
                     lhs = ItemPlaceholder::class,
                     rhs = {
-                        itemGen.generateContainer(
+                        itemFactory.generateContainer(
                                 size = ItemSize.values().toList().oneOf(),
                                 type = ContainerCategory.CHEST) /*.oneOrMore(2)*/ or
-                                itemGen.generateWeapon(
+                                itemFactory.generateWeapon(
                                         size = ItemSize.SMALL,
                                         type = WeaponCategory.WAND
                                 )
@@ -127,7 +132,7 @@ fun main(args: Array<String>) {
             ProductionRule(
                     lhs = MiscItemPlaceholder::class,
                     rhs = {
-                        (itemGen.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or emptyList() or Money.moderateValue())
+                        (itemFactory.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or emptyList() or Money.moderateValue())
                     }
             )
     )
@@ -154,10 +159,11 @@ fun main(args: Array<String>) {
                         -> roomItems.add(o)
                     }
             }
-            d.roomEnemies = enemyGrammar.generate(listOf(EnemyPlaceholder()))
+            val enemiesForRoom = enemyGrammar.generate(listOf(EnemyPlaceholder())).map{it as Enemy}
+            d.roomEnemies = enemiesForRoom
+            Dungeon.enemies.addAll(enemiesForRoom)
             println("   Enemies: ")
-            d.roomEnemies.forEach {
-                it as Enemy
+            enemiesForRoom.forEach {
                 println("       ${it.data.name}")
             }
             if (roomItems.isNotEmpty()) {
@@ -174,7 +180,7 @@ fun main(args: Array<String>) {
                                 val items = it.contents.map { i ->
                                     when (i) {
                                         is Item -> i.name
-                                        is Money -> i.toString()
+                                        is Money -> i.toPrettyString()
                                         else -> ""
                                     }
                                 }
@@ -190,7 +196,7 @@ fun main(args: Array<String>) {
     }
 
 
-    //todo make function to write out description of something
+    //todo make function to write out description of a grammar item (could be railrec)
 
 
 }
