@@ -7,7 +7,6 @@ import grammar.grammarItems.GrammarItemFactory
 import grammar.grammarItems.Placeholder
 import grammar.operators.OneOf
 import grammar.grammarItems.treasure.items.*
-import grammar.operators.or
 import kotlin.random.Random
 
 class ItemsFactory(private val rnd: Random):GrammarItemFactory {

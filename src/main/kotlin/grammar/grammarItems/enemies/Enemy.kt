@@ -37,7 +37,6 @@ class EnemyFactory(private val theme:Theme):GrammarItemFactory{
         enemy.data = OneOf(Random).oneOf(enemies).first()
         return enemy
     }
-
 }
 
 enum class Theme{

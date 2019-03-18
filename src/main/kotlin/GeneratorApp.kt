@@ -18,10 +18,13 @@ class MainMenu:View(){
     private val myController: MyController by inject()
     override val root = form {
 
-        combobox(values= myController.themes)
+
         fieldset(labelPosition = Orientation.VERTICAL) {
             field("Max Number of rooms") {
                 textfield(roomCount)
+            }
+            field("Theme for the dungeon"){
+                combobox(values= myController.themes)
             }
         }
         button("Generate!"){
@@ -38,10 +41,7 @@ class MainMenu:View(){
 }
 
 class MyController:Controller(){
-    val constraints = Constraints
     val themes = Theme.values().toList()
-
-
 
     fun generateMap(model:ViewModel){
 

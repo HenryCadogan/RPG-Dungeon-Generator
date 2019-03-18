@@ -1,0 +1,12 @@
+{
+  "theme": [
+    {
+      "name": "Aquatic",
+      "types": [
+        {
+          "description" : "Description of trap in aquatic room"
+        }
+      ]
+    }
+  ]
+}

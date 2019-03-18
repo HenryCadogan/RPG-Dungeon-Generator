@@ -10,14 +10,17 @@ import grammar.grammarItems.StartItem
 import grammar.grammarItems.enemies.Enemy
 import grammar.grammarItems.enemies.EnemyFactory
 import grammar.grammarItems.enemies.EnemyPlaceholder
+import grammar.grammarItems.enemies.Theme
+import grammar.grammarItems.factories.DungeonRoomFactory
 import grammar.grammarItems.rooms.DungeonRoom
-import grammar.grammarItems.rooms.DungeonRoomFactory
+
 import grammar.grammarItems.rooms.TrappedRoomFactory
 import grammar.grammarItems.treasure.*
 import grammar.grammarItems.treasure.items.*
 import grammar.grammarItems.treasure.money.Money
 import grammar.operators.GrammarOperators
 import grammar.operators.oneOf
+import grammar.operators.oneOrMore
 import grammar.operators.or
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -57,12 +60,11 @@ fun main(args: Array<String>) {
     val rnd = Random
     val ops = GrammarOperators(rnd)
     val const = Constraints
-
+    Constraints.theme = Theme.AQUATIC
     Factories.enemyFactory = EnemyFactory(const.theme)
     Factories.itemFactory = ItemsFactory(rnd)
     Factories.trappedRoomFactory = TrappedRoomFactory()
     Factories.roomFactory = DungeonRoomFactory(const.theme)
-
     const.rooms.maxRoomCount = 20
     const.rooms.roomSparsity = 0.5f
     const.rooms.trappedRoomPercentage = 20
@@ -94,11 +96,11 @@ fun main(args: Array<String>) {
                     rhs = {
                         itemFactory.generateContainer(
                                 size = ItemSize.values().toList().oneOf(),
-                                type = ContainerCategory.CHEST) /*.oneOrMore(2)*/ or
+                                type = ContainerCategory.CHEST).oneOrMore(3) or
                                 itemFactory.generateWeapon(
                                         size = ItemSize.SMALL,
                                         type = WeaponCategory.WAND
-                                )
+                                ) or emptyList()
                     }
             )
     )
@@ -162,15 +164,16 @@ fun main(args: Array<String>) {
             val enemiesForRoom = enemyGrammar.generate(listOf(EnemyPlaceholder())).map{it as Enemy}
             d.roomEnemies = enemiesForRoom
             Dungeon.enemies.addAll(enemiesForRoom)
-            println("   Enemies: ")
-            enemiesForRoom.forEach {
-                println("       ${it.data.name}")
+            if (enemiesForRoom.isNotEmpty()) {
+                println("   Enemies:")
+                enemiesForRoom.forEach {
+                    println("       ${it.data.name}")
+                }
             }
             if (roomItems.isNotEmpty()) {
                 println("   Items:")
                 roomItems.forEach {
                     when (it) {
-                        is Weapon -> println("      ${it.name}")
                         is Container -> {
                             it.contents = lootGrammar.generate(it.contents)
                             val name = it.data.name
@@ -188,7 +191,9 @@ fun main(args: Array<String>) {
                             } else {
                                 println("       An empty $name")
                             }
+
                         }
+                        else -> println("       ${it.name}")
                     }
                 }
             }

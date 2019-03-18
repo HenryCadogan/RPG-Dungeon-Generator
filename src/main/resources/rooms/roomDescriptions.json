@@ -1,0 +1,31 @@
+{
+  "themes": [
+    {
+      "name": "AQUATIC",
+      "walls": [
+        {
+          "description": "Description of the Aquatic walls 1. "
+        },
+        {
+          "description": "Description of the Aquatic walls 2. "
+        }
+      ],
+      "floor": [
+        {
+          "description": "Description of the Aquatic floors 1. "
+        },
+        {
+          "description": "Description of the Aquatic walls 2. "
+        }
+      ],
+      "ceiling": [
+        {
+          "description": "Description of the Aquatic ceiling 1. "
+        },
+        {
+          "description": "Description of the Aquatic ceiling 2. "
+        }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.enemies.Enemy
 import grammar.grammarItems.enemies.EnemyFactory
 import grammar.grammarItems.enemies.Theme
-import grammar.grammarItems.rooms.DungeonRoomFactory
+import grammar.grammarItems.factories.DungeonRoomFactory
 import grammar.grammarItems.rooms.TrappedRoomFactory
 import grammar.grammarItems.treasure.Item
 import grammar.grammarItems.treasure.ItemsFactory
