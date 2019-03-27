@@ -9,13 +9,14 @@ open class DungeonRoom(
         terminal: Boolean = false
 ) : GrammarItem(terminal) {
     var size = RoomSize(
-            height = Random.nextInt((70..100)),
-            width = Random.nextInt((70..100 ))
+            height = Random.nextInt((50..80)),
+            width = Random.nextInt((50..80))
     )
     var roomEnemies = listOf<Enemy>()
-    internal var trapped: Boolean = false
     var roomObjects = listOf<GrammarItem>()
+    internal var trapped: Boolean = false
     open lateinit var description: String
+    lateinit var identifier: String
 }
 
 data class RoomSize(

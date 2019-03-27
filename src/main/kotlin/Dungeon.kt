@@ -35,6 +35,7 @@ class Dungeon {
         for (d in rooms) {
             dungeonRoomCount++
             d as DungeonRoom
+            d.identifier = dungeonRoomCount.toString()
             sb.appendln("Room $dungeonRoomCount: ${d.description}")
             d.roomObjects = itemGrammar.generate(listOf(ItemPlaceholder()))
 

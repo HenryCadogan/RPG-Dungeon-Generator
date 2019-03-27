@@ -15,6 +15,8 @@ object Constraints {
         var maxRoomCount = 20
         var roomSparsity = 0.7f
         var trappedRoomPercentage = 20
+        var maxRoomSize = 100
+        var roomDistance = 1f
     }
 
     object Enemies {
