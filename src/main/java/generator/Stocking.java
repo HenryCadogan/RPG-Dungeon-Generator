@@ -26,7 +26,7 @@ public class Stocking {
 				break;
 		case 1: roomType = "generator.Monster";
 				break;
-		case 2: roomType = "Trap";
+		case 2: roomType = "Traps";
 				break;
 		case 3: roomType = "Special";
 				break;
@@ -199,7 +199,7 @@ public class Stocking {
 				
 				if(roomType == "generator.Monster"){
 					monsterPlacement(write);
-				} else if (roomType == "Trap"){
+				} else if (roomType == "Traps"){
 					trapPlacement(write);
 				} else if (roomType == "Special"){
 					specialPlacement(write);

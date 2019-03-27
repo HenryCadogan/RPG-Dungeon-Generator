@@ -1,4 +1,4 @@
-package grammar.grammarItems.treasure
+package grammar.grammarItems.factories
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -7,6 +7,7 @@ import grammar.grammarItems.GrammarItemFactory
 import grammar.grammarItems.Placeholder
 import grammar.operators.OneOf
 import grammar.grammarItems.treasure.items.*
+import grammar.operators.oneOf
 import kotlin.random.Random
 
 class ItemsFactory(private val rnd: Random):GrammarItemFactory {
@@ -22,12 +23,14 @@ class ItemsFactory(private val rnd: Random):GrammarItemFactory {
     private val containersFile = this::class.java.getResource("/Items/containers.json")
     private val weaponsFile = this::class.java.getResource("/Items/weapons.json")
     private val miscFile = this::class.java.getResource("/Items/miscItems.json")
+    private val keysAndLocksFile = this::class.java.getResource("/Items/keysandlocks.json")
     private val mapper = jacksonObjectMapper().enable(
             MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES,MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
 
     private val containers = mapper.readValue(containersFile, Containers::class.java)
     private val weapons = mapper.readValue(weaponsFile, Weapons::class.java)
     private val miscItems = mapper.readValue(miscFile,MiscItems::class.java)
+    private val keysAndLocks = mapper.readValue(keysAndLocksFile, KeysAndLocks::class.java)
 
     fun generateWeapon(size: ItemSize, type: WeaponCategory): Item {
         val items = weapons.weaponTypes.find { it.name == type }
@@ -45,7 +48,29 @@ class ItemsFactory(private val rnd: Random):GrammarItemFactory {
         return Container(OneOf(rnd).oneOf(possibleContainers).first())
     }
 
-    fun generateMiscItem(type:MiscItemCategory):Item {
+    fun generateLockedContainerAndKey(size: ItemSize, type: ContainerCategory): GrammarItem {
+        val container = generateContainer(size, type)
+
+        val keyAndLock = keysAndLocks.items.oneOf()
+
+        val vData = container.variantData
+        var newData:ContainerVariant
+        if (vData is ContainerVariant) {
+            newData = ContainerVariant(
+                    maxDC = vData.maxDC,
+                    minDC = vData.minDC,
+                    name = vData.name,
+                    size = vData.size,
+                    description = "${vData.description} This container is locked! ${keyAndLock.lock}")
+
+        }else{
+            throw RuntimeException("Variant data for Container object is not ContainerVariant, instead is ${vData::class}")
+        }
+        val lockedContainer = LockedContainer(data = newData )
+        return LockedContainerAndKey(container = lockedContainer , key = Key(keyAndLock.key))
+    }
+
+    fun generateMiscItem(type:MiscItemCategory): Item {
         val items = miscItems.miscItemTypes.find{it.name == type}
                 ?: throw ItemTypeNotFoundException(type.toString())
         return MiscItem(OneOf(rnd).oneOf(items.variants).first())
@@ -73,7 +98,32 @@ class ItemsFactory(private val rnd: Random):GrammarItemFactory {
     }
 }
 
-data class Container(val data: ContainerVariant, var contents: List<GrammarItem> = listOf(TreasurePlaceholder())) : Item(ItemType.CONTAINER, data, data.name)
+data class Container(val data: ContainerVariant,
+                     internal var contents: List<GrammarItem> = listOf(TreasurePlaceholder())
+) : Item(ItemType.CONTAINER, data, data.name)
+
+data class LockedContainer(val data: ContainerVariant,
+                            internal var contents: List<GrammarItem> = listOf(TreasurePlaceholder())
+) : Item(ItemType.CONTAINER, data, data.name)
+
+data class Key(
+        val description:String
+)
+
+data class LockedContainerAndKey(
+        val container: LockedContainer,
+        val key: Key
+): GrammarItem(true)
+
+data class KeysAndLocks(
+        val items:List<KeyAndLock>
+) {
+    data class KeyAndLock(
+            val key:String,
+            val lock:String
+    )
+}
+
 data class Weapon(val data: WeaponVariant) : Item(ItemType.WEAPON, data, data.name)
 data class MiscItem(val data: MiscItemVariant) : Item(ItemType.MISC, data, data.name)
 
@@ -81,6 +131,7 @@ data class MiscItem(val data: MiscItemVariant) : Item(ItemType.MISC, data, data.
 class TreasurePlaceholder: GrammarItem(false),Placeholder
 class ItemPlaceholder: GrammarItem(false),Placeholder
 class MiscItemPlaceholder: GrammarItem(false),Placeholder
+
 
 open class Item(
         val itemType: ItemType,

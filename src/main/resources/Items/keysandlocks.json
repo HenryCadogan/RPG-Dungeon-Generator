@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "key": "A skull shaped key",
+      "lock": "The lock has a small inscription of a skull above it"
+    },
+    {
+      "key": "Dispel Magic or equivalent",
+      "lock": "The lock emits a dim blue light and humms gently"
+    },
+    {
+      "key": "Answer to the Riddle: 'insert riddle here'",
+      "lock": "A 5 letter cryptex"
+    }
+  ]
+}

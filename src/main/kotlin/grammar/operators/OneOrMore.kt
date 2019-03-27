@@ -6,7 +6,7 @@ import grammar.grammarItems.Placeholder
 import grammar.grammarItems.enemies.Enemy
 import grammar.grammarItems.rooms.DungeonRoom
 import grammar.grammarItems.rooms.TrappedRoom
-import grammar.grammarItems.treasure.Item
+import grammar.grammarItems.factories.Item
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance

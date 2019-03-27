@@ -1,30 +1,54 @@
-
 {
-  "ContainerTypes":
-    [
-      {
+  "ContainerTypes": [
+    {
       "name": "CHEST",
       "variants": [
         {
-          "name": "Small pouch",
+          "name": "Tiny Box",
           "minDC": 0,
           "maxDC": 5,
-          "size" : "SMALL",
-          "description": "A small pouch, probably used to carry money"
+          "size": "SMALL",
+          "description": "A very small ornate box, probably used to carry money"
         },
         {
           "name": "Antique Chest",
           "minDC": 10,
           "maxDC": 18,
-          "size" : "MEDIUM",
-          "description": "A very old chest."
+          "size": "MEDIUM",
+          "description": "A very old ornate chest."
         },
         {
           "name": "Strongbox",
           "minDC": 14,
           "maxDC": 12,
-          "size" : "LARGE",
+          "size": "LARGE",
           "description": "A large sturdy chest."
+        }
+      ]
+    },
+    {
+      "name": "POUCH",
+      "variants": [
+        {
+          "name": "Small pouch",
+          "minDC": 0,
+          "maxDC": 5,
+          "size": "SMALL",
+          "description": "A small pouch, probably used to carry money"
+        },
+        {
+          "name": "An adventurers backpack",
+          "minDC": 2,
+          "maxDC": 5,
+          "size": "MEDIUM",
+          "description": "An old adventurers backpack riddled with holes."
+        },
+        {
+          "name": "Large hemp sack",
+          "minDC": 14,
+          "maxDC": 12,
+          "size": "LARGE",
+          "description": "A large sack made from hemp fibres, probably big enough to fit a human inside."
         }
       ]
     }

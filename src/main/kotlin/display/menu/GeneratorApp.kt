@@ -1,9 +1,9 @@
-
-import grammar.Constraints
-import grammar.grammarItems.enemies.Theme
+package display.menu
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
+import theme.Theme
 import tornadofx.*
+
 
 
 class GeneratorApp: App(){
@@ -43,8 +43,7 @@ class MainMenu:View(){
 class MyController:Controller(){
     val themes = Theme.values().toList()
 
-    fun generateMap(model:ViewModel){
-
+    fun generateMap(model:ViewModel) {
     }
 }
 

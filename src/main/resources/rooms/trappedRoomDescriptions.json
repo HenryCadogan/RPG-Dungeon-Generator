@@ -1,8 +1,8 @@
 {
-  "theme": [
+  "themes": [
     {
-      "name": "Aquatic",
-      "types": [
+      "ThemeName": "AQUATIC",
+      "trapList": [
         {
           "description" : "Description of trap in aquatic room"
         }

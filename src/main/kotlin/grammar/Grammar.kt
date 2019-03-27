@@ -1,27 +1,15 @@
 package grammar
 
-import grammar.Factories.enemyFactory
-import grammar.Factories.itemFactory
-import grammar.Factories.roomFactory
-import grammar.Factories.trappedRoomFactory
-import grammar.grammarItems.and
+import Dungeon
+import display.dungeon.DungeonDrawer
 import grammar.grammarItems.GrammarItem
-import grammar.grammarItems.StartItem
-import grammar.grammarItems.enemies.Enemy
 import grammar.grammarItems.enemies.EnemyFactory
-import grammar.grammarItems.enemies.EnemyPlaceholder
-import grammar.grammarItems.enemies.Theme
 import grammar.grammarItems.factories.DungeonRoomFactory
-import grammar.grammarItems.rooms.DungeonRoom
-
-import grammar.grammarItems.rooms.TrappedRoomFactory
-import grammar.grammarItems.treasure.*
-import grammar.grammarItems.treasure.items.*
-import grammar.grammarItems.treasure.money.Money
-import grammar.operators.GrammarOperators
-import grammar.operators.oneOf
-import grammar.operators.oneOrMore
-import grammar.operators.or
+import grammar.grammarItems.factories.ItemsFactory
+import grammar.grammarItems.factories.TrappedRoomFactory
+import theme.Theme
+import java.io.File
+import javax.imageio.ImageIO
 import kotlin.random.Random
 import kotlin.reflect.KClass
 
@@ -58,151 +46,23 @@ class RuleNotFoundException(clazz: KClass<out GrammarItem>) : RuntimeException("
 fun main(args: Array<String>) {
     println("Starting")
     val rnd = Random
-    val ops = GrammarOperators(rnd)
-    val const = Constraints
     Constraints.theme = Theme.AQUATIC
-    Factories.enemyFactory = EnemyFactory(const.theme)
+    Factories.enemyFactory = EnemyFactory(Constraints.theme)
     Factories.itemFactory = ItemsFactory(rnd)
     Factories.trappedRoomFactory = TrappedRoomFactory()
-    Factories.roomFactory = DungeonRoomFactory(const.theme)
-    const.rooms.maxRoomCount = 20
-    const.rooms.roomSparsity = 0.5f
-    const.rooms.trappedRoomPercentage = 20
-    const.enemies.maxEnemiesPerRoom = 5
-    const.enemies.enemySparcity = 0.2f
+    Factories.roomFactory = DungeonRoomFactory(Constraints.theme)
+    Constraints.rooms.maxRoomCount = 20
+    Constraints.rooms.roomSparsity = 0.5f
+    Constraints.rooms.trappedRoomPercentage = 20
+    Constraints.enemies.maxEnemiesPerRoom = 5
+    Constraints.enemies.enemySparsity = 0.2f
+    val dungeon = Dungeon()
+    val drawer = DungeonDrawer(Constraints.theme)
+    val output = dungeon.generate()
 
-    val roomRules = listOf(
-            ProductionRule(
-                    lhs = DungeonRoom::class,
-                    rhs = {
-                        ops.oneOf.oneOf(mapOf(
-                                roomFactory.terminal() to 100 - const.rooms.trappedRoomPercentage,
-                                trappedRoomFactory.terminal() to const.rooms.trappedRoomPercentage
-                        ))
-                    }
-            ),
-            ProductionRule(
-                    lhs = StartItem::class,
-                    rhs = {
-                        roomFactory.entranceRoomToDungeon() and ops.oneOrMore.oneOrMore(
-                                roomFactory.nonTerminal(), const.rooms.maxRoomCount, const.rooms.roomSparsity)
-                    }
-            )
-    )
-
-    val itemRules = listOf(
-            ProductionRule(
-                    lhs = ItemPlaceholder::class,
-                    rhs = {
-                        itemFactory.generateContainer(
-                                size = ItemSize.values().toList().oneOf(),
-                                type = ContainerCategory.CHEST).oneOrMore(3) or
-                                itemFactory.generateWeapon(
-                                        size = ItemSize.SMALL,
-                                        type = WeaponCategory.WAND
-                                ) or emptyList()
-                    }
-            )
-    )
-
-    val enemyRules = listOf(
-            ProductionRule(
-                    lhs = EnemyPlaceholder::class,
-                    rhs = {
-                        ops.oneOrMore.oneOrMore(
-                                item = (enemyFactory.terminal() or enemyFactory.nonTerminal()).first(),
-                                limit = const.enemies.maxEnemiesPerRoom,
-                                probability = const.enemies.enemySparcity
-                        )
-                    }
-            ),
-            ProductionRule(
-                    lhs = Enemy::class,
-                    rhs = {
-                        listOf(enemyFactory.terminal()) or emptyList()
-                    }
-            )
-    )
-
-    val lootRules = listOf(
-            ProductionRule(
-                    lhs = TreasurePlaceholder::class,
-                    rhs = {
-                        ((Money.lowValue() and MiscItemPlaceholder()) or (ops.oneOrMore.oneOrMore(MiscItemPlaceholder(), 3, 70f)) or emptyList())
-                    }
-            ),
-            ProductionRule(
-                    lhs = MiscItemPlaceholder::class,
-                    rhs = {
-                        (itemFactory.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or emptyList() or Money.moderateValue())
-                    }
-            )
-    )
-
-
-    val roomGrammar = Grammar(roomRules)
-    val itemGrammar = Grammar(itemRules)
-    val enemyGrammar = Grammar(enemyRules)
-    val lootGrammar = Grammar(lootRules)
-    Dungeon.rooms = roomGrammar.generate(listOf(StartItem())).toMutableList()
-
-    println("Components are")
-    for (d in Dungeon.rooms) {
-        if (d is DungeonRoom) {
-            println(d.description)
-            d.roomObjects = itemGrammar.generate(listOf(ItemPlaceholder()))
-            val roomItems = mutableListOf<Item>()
-            for (o in d.roomObjects) {
-                if (o is Item)
-                    when {
-                        o.variantData is WeaponVariant ||
-                                o.variantData is ContainerVariant ||
-                                o.variantData is MiscItemVariant
-                        -> roomItems.add(o)
-                    }
-            }
-            val enemiesForRoom = enemyGrammar.generate(listOf(EnemyPlaceholder())).map{it as Enemy}
-            d.roomEnemies = enemiesForRoom
-            Dungeon.enemies.addAll(enemiesForRoom)
-            if (enemiesForRoom.isNotEmpty()) {
-                println("   Enemies:")
-                enemiesForRoom.forEach {
-                    println("       ${it.data.name}")
-                }
-            }
-            if (roomItems.isNotEmpty()) {
-                println("   Items:")
-                roomItems.forEach {
-                    when (it) {
-                        is Container -> {
-                            it.contents = lootGrammar.generate(it.contents)
-                            val name = it.data.name
-                            if (!it.contents.isEmpty()) {
-                                println("       $name")
-
-                                val items = it.contents.map { i ->
-                                    when (i) {
-                                        is Item -> i.name
-                                        is Money -> i.toPrettyString()
-                                        else -> ""
-                                    }
-                                }
-                                println("           Containing: $items")
-                            } else {
-                                println("       An empty $name")
-                            }
-
-                        }
-                        else -> println("       ${it.name}")
-                    }
-                }
-            }
-        }
-    }
-
-
+    ImageIO.write(drawer.drawDungeon(dungeon),"png",File("generator.Dungeon.png"))
+    println(output)
     //todo make function to write out description of a grammar item (could be railrec)
-
 
 }
 

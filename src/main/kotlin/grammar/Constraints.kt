@@ -1,13 +1,10 @@
 package grammar
 
-import grammar.grammarItems.GrammarItem
-import grammar.grammarItems.enemies.Enemy
 import grammar.grammarItems.enemies.EnemyFactory
-import grammar.grammarItems.enemies.Theme
 import grammar.grammarItems.factories.DungeonRoomFactory
-import grammar.grammarItems.rooms.TrappedRoomFactory
-import grammar.grammarItems.treasure.Item
-import grammar.grammarItems.treasure.ItemsFactory
+import grammar.grammarItems.factories.ItemsFactory
+import grammar.grammarItems.factories.TrappedRoomFactory
+import theme.Theme
 
 object Constraints {
     val rooms = Rooms
@@ -16,21 +13,14 @@ object Constraints {
 
     object Rooms {
         var maxRoomCount = 20
-        var roomSparsity = 0.5f
+        var roomSparsity = 0.7f
         var trappedRoomPercentage = 20
-        var trappedContainerPercentage = 0.3
     }
 
     object Enemies {
-        var maxEnemiesPerRoom = 4
-        var enemySparcity = 0.7f
+        var maxEnemiesPerRoom = 7
+        var enemySparsity = 0.5f
     }
-}
-
-object Dungeon {
-    var rooms = mutableListOf<GrammarItem>()
-    val enemies = mutableListOf<Enemy>()
-    val treasure = mutableListOf<Item>()
 }
 
 object Factories {

@@ -6,6 +6,7 @@ import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.GrammarItemFactory
 import grammar.operators.OneOf
 import kotlin.random.Random
+import theme.Theme
 
 open class Enemy(terminal:Boolean = false): GrammarItem(terminal){
     lateinit var data:Monster
@@ -39,11 +40,3 @@ class EnemyFactory(private val theme:Theme):GrammarItemFactory{
     }
 }
 
-enum class Theme{
-    AQUATIC,
-    FORESTRY,
-    UNDEAD,
-    RANDOM,
-    DRAGON,
-    HUMANOID
-}

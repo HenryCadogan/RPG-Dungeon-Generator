@@ -1,22 +1,26 @@
 package grammar.grammarItems.rooms
 
 import grammar.grammarItems.GrammarItem
+import grammar.grammarItems.enemies.Enemy
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 open class DungeonRoom(
         terminal: Boolean = false
 ) : GrammarItem(terminal) {
-    lateinit var size: RoomSize
-    var roomEnemies = listOf<GrammarItem>()
-    var trapped: Boolean = false
+    var size = RoomSize(
+            height = Random.nextInt((70..100)),
+            width = Random.nextInt((70..100 ))
+    )
+    var roomEnemies = listOf<Enemy>()
+    internal var trapped: Boolean = false
     var roomObjects = listOf<GrammarItem>()
     open lateinit var description: String
-
-    fun isTrapped() = trapped
 }
 
 data class RoomSize(
-        val x: Int,
-        val y: Int
+        val width: Int,
+        val height: Int
 )
 
 data class MapPosition(

@@ -23,6 +23,7 @@ public class Dungeon {
 	Dungeon rightChild;
 	Dungeon room;
 
+
 	Boolean isConnected;
 	
 	ArrayList <Dungeon> dungeons;
@@ -86,9 +87,7 @@ public class Dungeon {
 			rightChild = new Dungeon (splitLocation, startY, endX, endY);
 			
 		}
-		
 		return true;
-		
 	}
 	
 	void makeLeafs(Dungeon root){
@@ -106,7 +105,6 @@ public class Dungeon {
 				dungeons.add(splitting.rightChild);
 			}
 		}
-		
 	}
 	
 	//create rooms within the selected leaf (see first part of drawDungeon below)
@@ -133,11 +131,9 @@ public class Dungeon {
 			int roomEndY = ThreadLocalRandom.current().nextInt (roomStartY, endY);
 			if (roomEndY - minRoomSize < roomStartY){
 				roomEndY = roomStartY + minRoomSize;
-			};
-			
+			}
 			room = new Dungeon (roomStartX, roomStartY, roomEndX, roomEndY);
 		}
-		
 	}
 	
 	void drawDungeon(Dungeon root){
@@ -211,7 +207,7 @@ public class Dungeon {
 		try{
 			ImageIO.write(image, "png", new File("generator.Dungeon.png"));
 		}catch(IOException e){
-			System.err.println("Could not save image");
+			System.err.println("Could not save image due to" + e.getMessage());
 		}
 	}
 	

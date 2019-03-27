@@ -1,9 +1,10 @@
 package grammar.grammarItems.treasure.items
 
-import grammar.grammarItems.treasure.ItemSize
+import grammar.grammarItems.factories.ItemSize
 
 enum class ContainerCategory {
-    CHEST
+    CHEST,
+    POUCH
 }
 
 data class Containers(

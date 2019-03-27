@@ -1,6 +1,6 @@
 package grammar.grammarItems.treasure.items
 
-import grammar.grammarItems.treasure.ItemSize
+import grammar.grammarItems.factories.ItemSize
 import grammar.grammarItems.treasure.money.Money
 
 

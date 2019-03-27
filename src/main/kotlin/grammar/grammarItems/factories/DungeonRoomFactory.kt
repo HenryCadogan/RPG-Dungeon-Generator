@@ -4,14 +4,15 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.GrammarItemFactory
-import grammar.grammarItems.enemies.Theme
 import grammar.grammarItems.rooms.DungeonRoom
 import grammar.operators.OneOf
 import grammar.operators.oneOf
 import kotlin.random.Random
+import theme.Theme
 
 
-class DungeonRoomFactory(private val theme: Theme) : GrammarItemFactory {
+
+open class DungeonRoomFactory(private val theme: Theme) : GrammarItemFactory {
 
     private val descriptionsFile = this::class.java.getResource("/rooms/roomDescriptions.json")
     private val featuresFile = this::class.java.getResource("/rooms/interestingFeatures/features.json")
@@ -34,7 +35,7 @@ class DungeonRoomFactory(private val theme: Theme) : GrammarItemFactory {
         return room
     }
 
-    private fun generateDescription():String{
+    fun generateDescription():String{
         val sb = StringBuilder()
 
         val themedDesc = descriptions.themes.find{it.name == theme.name} ?: throw ThemeDescriptionNotFound(theme)
