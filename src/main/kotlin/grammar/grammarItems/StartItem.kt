@@ -1,3 +1,4 @@
 package grammar.grammarItems
 
-class StartItem:GrammarItem(false)
+
+class StartItem:GrammarItem(terminal = false)

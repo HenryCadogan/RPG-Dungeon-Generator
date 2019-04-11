@@ -57,13 +57,11 @@ fun main(args: Array<String>) {
     Constraints.enemies.maxEnemiesPerRoom = 5
     Constraints.enemies.enemySparsity = 0.2f
     val dungeon = Dungeon()
-    val drawer = DungeonDrawer(Constraints.theme)
+    //must call generate before calling draw or things will go wrong due to lateinit vars
     val output = dungeon.generate()
-
-    ImageIO.write(drawer.drawDungeon(dungeon),"png",File("generator.Dungeon.png"))
+    ImageIO.write(dungeon.draw(),"png",File("generator.Dungeon.png"))
     println(output)
     //todo make function to write out description of a grammar item (could be railrec)
-
 }
 
 

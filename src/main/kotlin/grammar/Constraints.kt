@@ -17,6 +17,7 @@ object Constraints {
         var trappedRoomPercentage = 20
         var maxRoomSize = 100
         var roomDistance = 1f
+        var connectivityThreshold = 10
     }
 
     object Enemies {
@@ -31,3 +32,8 @@ object Factories {
     lateinit var roomFactory: DungeonRoomFactory
     lateinit var trappedRoomFactory: TrappedRoomFactory
 }
+
+object ID{
+    var count = 0
+}
+

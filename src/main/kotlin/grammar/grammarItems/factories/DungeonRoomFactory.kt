@@ -2,6 +2,7 @@ package grammar.grammarItems.factories
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import grammar.ID
 import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.GrammarItemFactory
 import grammar.grammarItems.rooms.DungeonRoom
@@ -22,6 +23,7 @@ open class DungeonRoomFactory(private val theme: Theme) : GrammarItemFactory {
 
     private val descriptions = mapper.readValue(descriptionsFile,Descriptions::class.java)
     private val features = mapper.readValue(featuresFile,RoomFeatures::class.java)
+
 
     override fun nonTerminal(): GrammarItem {
         val room = DungeonRoom(false)
@@ -47,9 +49,7 @@ open class DungeonRoomFactory(private val theme: Theme) : GrammarItemFactory {
     }
 
     fun entranceRoomToDungeon(): DungeonRoom {
-        val room = DungeonRoom(
-                terminal = true
-        )
+        val room = DungeonRoom(terminal = true)
         room.description = "The starting room for this adventure. ${generateDescription()}"
         return room
     }
