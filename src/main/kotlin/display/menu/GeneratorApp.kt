@@ -176,7 +176,7 @@ class MainMenu : View("Dungeon Generator Settings") {
 
     init {
         //add initial values to model in case the user does not change them
-        roomConnectivity.value = connectivitySlider.value
+        roomConnectivity.value = connectivitySlider.value*100
         roomCount.value = 10
         roomSparsity.value = sparsitySlider.value
         trappedPercentage.value = trappedSlider.value
@@ -198,7 +198,7 @@ class MainMenu : View("Dungeon Generator Settings") {
             trappedLabel.text = (new_val.toDouble() * 100).toInt().toString()
         }
         connectivitySlider.valueProperty().addListener { _, _, new_val ->
-            roomConnectivity.value = new_val
+            roomConnectivity.value = (new_val.toDouble()*100).toInt()
             connectivityLabel.text = (new_val.toDouble() * 100).toInt().toString()
         }
 
@@ -225,8 +225,8 @@ class MyController : Controller() {
                 .map(charPool::get)
                 .joinToString("")
 
-        val imageFile = File("${saveLocation}Dungeon$name.png")
-        val textFile = File("${saveLocation}Dungeon$name.txt")
+        val imageFile = File("${saveLocation}\\Dungeon$name")
+        val textFile = File("${saveLocation}\\Dungeon$name.txt")
         textFile.writeText(text)
         ImageIO.write(image, "png", imageFile)
         val desktop = Desktop.getDesktop()

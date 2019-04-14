@@ -62,7 +62,7 @@ class DungeonDrawer(val theme: Theme) {
             g2D.drawRoundRect(x + 1, y + 1, boxWidth, 15, 4, 4)
             g2D.drawString(room.id, x + 5, y + 12)
         }
-
+        g2D.dispose()
         return image
     }
 
