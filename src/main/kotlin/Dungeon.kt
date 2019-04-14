@@ -35,28 +35,9 @@ class Dungeon {
     private var plots= listOf<Plot>()
     private var plotSize = (Constraints.rooms.maxRoomSize * 1.5).roundToInt()
 
+
+
     fun getRooms() = rooms.map{it as DungeonRoom}
-
-    private fun determinePaths(){
-        val allRooms = rooms.map{it as DungeonRoom}
-        val unvisitedRooms = allRooms.toMutableList()
-        while (unvisitedRooms.isNotEmpty()){
-            val roomToConnect = unvisitedRooms.oneOf()
-            println("Visited ${roomToConnect.id}")
-            val rc = roomToConnect.getNearestRoom(unvisitedRooms)
-            roomToConnect.rightChiLd = rc
-            val newRooms = unvisitedRooms.filter{it.id != rc.id}
-            if(newRooms.isEmpty()){
-                unvisitedRooms.remove(roomToConnect)
-                break
-            }
-            val lc = roomToConnect.getNearestRoom(newRooms)
-            roomToConnect.leftChiLd = lc
-            unvisitedRooms.remove(roomToConnect)
-            println("Rooms left to visit are ${unvisitedRooms.map{it.id}}")
-        }
-    }
-
 
     private fun makeRoomTree(){
         val leaves = mutableListOf<DungeonRoom>()
@@ -89,21 +70,25 @@ class Dungeon {
     }
 
 
-
-
     private fun determineLocations(){
         plots = calculatePlots(getRooms().size, plotSize)
         for (roomNumber in 0 until rooms.size){
             val room = rooms[roomNumber] as DungeonRoom
             val plot = plots[roomNumber]
-            val x = plot.x + Random.nextInt((1..plot.width - room.size.width))
-            val y = plot.y + Random.nextInt((1..plot.height - room.size.height))
-            room.position = MapPosition(x, y)
+            val buffer = Constraints.rooms.minroomDistance
+            val x = plot.x + buffer + Random.nextInt((1..plot.width - room.size.width))
+            val y = plot.y + buffer + Random.nextInt((1..plot.height - room.size.height))
+            room.position = MapPosition(x.toInt(), y.toInt())
         }
     }
 
     private fun calculatePlots(roomCount: Int, plotSize: Int): List<Plot> {
-        val numPlots = roomCount / 2
+        val numPlots = if (roomCount <=5) {
+            roomCount
+        } else {
+            roomCount/2
+        }
+
         val plots = mutableListOf<Plot>()
         var index = 0
         for (y in 0 until numPlots) {
@@ -124,7 +109,7 @@ class Dungeon {
     }
 
     fun draw(): BufferedImage {
-        val imageSize = (plots.size * plotSize) / 2
+        val imageSize = (plots.size * plotSize)
         return drawer.drawDungeon(this,imageSize)
     }
 

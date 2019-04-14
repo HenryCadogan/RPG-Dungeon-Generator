@@ -1,5 +1,6 @@
 package grammar.grammarItems.rooms
 
+import grammar.Constraints
 import grammar.grammarItems.GrammarItem
 import grammar.grammarItems.enemies.Enemy
 import kotlin.math.atan2
@@ -11,8 +12,8 @@ open class DungeonRoom(
         terminal: Boolean = false
 ) : GrammarItem(terminal) {
     var size = RoomSize(
-            height = Random.nextInt((40..90)),
-            width = Random.nextInt((40..90))
+            height = Random.nextInt((40..Constraints.rooms.maxRoomSize)),
+            width = Random.nextInt((40..Constraints.rooms.maxRoomSize))
     )
     var roomEnemies = listOf<Enemy>()
     var roomObjects = listOf<GrammarItem>()

@@ -18,10 +18,12 @@ import kotlin.random.nextInt
 class DungeonDrawer(val theme: Theme) {
 
     fun drawDungeon(dungeon: Dungeon,imageSize:Int): BufferedImage {
-        val image = BufferedImage(imageSize, imageSize, BufferedImage.TYPE_INT_RGB)
+        val imageWidth = imageSize/2
+        val imageHeight = imageSize/2
+        val image = BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB)
         val g2D = image.createGraphics()
-        g2D.paint = getBackGroundTexture(imageSize)
-        g2D.fillRect(0, 0, imageSize, imageSize)
+        g2D.paint = getBackGroundTexture(imageSize/2)
+        g2D.fillRect(0, 0, imageWidth, imageHeight)
         val bs1 = BasicStroke(1.5f, BasicStroke.CAP_ROUND,
                 BasicStroke.JOIN_BEVEL)
         g2D.stroke = bs1
@@ -32,12 +34,10 @@ class DungeonDrawer(val theme: Theme) {
             val y = room.position.y
             val size = room.size
 
-
             g2D.paint = getRoomTexture(size.width, size.height)
             g2D.fillRect(x, y, size.width, size.height)
             g2D.color = Color.BLACK
             g2D.drawRect(x, y, size.width, size.height)
-
 
             for (item in room.roomObjects) {
                 val itemSize = 10
@@ -113,13 +113,6 @@ class DungeonDrawer(val theme: Theme) {
     }
 
 
-
-
-
 }
-
-
-
-class ClosestRoomNotFoundException(room:DungeonRoom) : RuntimeException("Could not find any rooms near point ${room.position.x},${room.position.y}")
 
 

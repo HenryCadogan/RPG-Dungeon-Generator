@@ -13,10 +13,10 @@ object Constraints {
 
     object Rooms {
         var maxRoomCount = 20
-        var roomSparsity = 0.7f
-        var trappedRoomPercentage = 20
+        var roomSparsity = 0.5f
+        var trappedRoomPercentage = 0.2f
         var maxRoomSize = 100
-        var roomDistance = 1f
+        var minroomDistance = 1f
         var connectivityThreshold = 10
     }
 

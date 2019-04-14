@@ -28,8 +28,8 @@ object Rules{
                     lhs = DungeonRoom::class,
                     rhs = {
                         ops.oneOf.oneOf(mapOf(
-                                Factories.roomFactory.terminal() to 100 - Constraints.rooms.trappedRoomPercentage,
-                                Factories.trappedRoomFactory.terminal() to Constraints.rooms.trappedRoomPercentage
+                                Factories.roomFactory.terminal() to (1 - Constraints.rooms.trappedRoomPercentage*100).toInt(),
+                                Factories.trappedRoomFactory.terminal() to (Constraints.rooms.trappedRoomPercentage*100).toInt()
                         ))
                     }
             ),
