@@ -11,9 +11,11 @@ import kotlin.random.nextInt
 open class DungeonRoom(
         terminal: Boolean = false
 ) : GrammarItem(terminal) {
+    private val h = Random.nextInt(Constraints.rooms.minRoomSize..Constraints.rooms.maxRoomSize)
+    private val w = Random.nextInt(((h*0.8).toInt())..((h*1.2).toInt()))
     var size = RoomSize(
-            height = Random.nextInt((40..Constraints.rooms.maxRoomSize)),
-            width = Random.nextInt((40..Constraints.rooms.maxRoomSize))
+            height =h,
+            width = w
     )
     var roomEnemies = listOf<Enemy>()
     var roomObjects = mutableListOf<GrammarItem>()

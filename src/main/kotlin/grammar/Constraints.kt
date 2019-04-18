@@ -16,7 +16,8 @@ object Constraints {
         var roomSparsity = 0.5f
         var trappedRoomPercentage = 0.2f
         var maxRoomSize = 100
-        var minroomDistance = 1f
+        var minRoomSize = 30
+        var minRoomDistance = 1f
         var connectivityThreshold = 10
     }
 

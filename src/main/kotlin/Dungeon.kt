@@ -77,7 +77,7 @@ class Dungeon {
         for (roomNumber in 0 until rooms.size) {
             val room = rooms[roomNumber] as DungeonRoom
             val plot = plots[roomNumber]
-            val buffer = Constraints.rooms.minroomDistance
+            val buffer = Constraints.rooms.minRoomDistance
             val x = plot.x + buffer + Random.nextInt((1..plot.width - room.size.width))
             val y = plot.y + buffer + Random.nextInt((1..plot.height - room.size.height))
             room.position = MapPosition(x.toInt(), y.toInt())

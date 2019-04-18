@@ -1,6 +1,7 @@
 package display.dungeon
 
 import Dungeon
+import grammar.Constraints
 import grammar.grammarItems.rooms.DungeonRoom
 import grammar.grammarItems.rooms.MapPosition
 import grammar.grammarItems.rooms.angleTo
@@ -10,6 +11,7 @@ import theme.Theme
 import java.awt.*
 import java.lang.RuntimeException
 import javax.imageio.ImageIO
+import javax.swing.SpringLayout
 import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -29,7 +31,7 @@ class DungeonDrawer(val theme: Theme) {
         g2D.stroke = bs1
         drawCorridors(g2D,dungeon.getRooms())
         for (room in  dungeon.getRooms()) {
-            //todo future change to be tile based
+            //todo future change to be tile based(!!BIG REFACTOR!!)
             val x = room.position.x
             val y = room.position.y
             val size = room.size
@@ -93,23 +95,22 @@ class DungeonDrawer(val theme: Theme) {
 
     private fun getBackGroundTexture(size: Int): TexturePaint {
         //todo get the themed texture here
-        val url = this::class.java.getResource("/textures/backgrounds/Stone.jpg")
+        val url = this::class.java.getResource("/textures/backgrounds/${theme.toString().toLowerCase()}/background.jpg")
         val texture = ImageIO.read(url)
         return TexturePaint(texture, Rectangle(size, size))
     }
 
     private fun getRoomTexture(width: Int, height: Int): TexturePaint {
-        val url = this::class.java.getResource("/textures/rooms/woodenFloor.jpg")
+        val url = this::class.java.getResource("/textures/rooms/${theme.toString().toLowerCase()}/floor.jpg")
         val texture = ImageIO.read(url)
         return TexturePaint(texture, Rectangle(width, height))
     }
 
     private fun getCorridorTexture(width: Int, height: Int):TexturePaint{
-        val url = this::class.java.getResource("/textures/corridors/dirtFloor.jpg")
+        val url = this::class.java.getResource("/textures/corridors/${theme.toString().toLowerCase()}/corridor.jpg")
         val texture = ImageIO.read(url)
         return TexturePaint(texture, Rectangle(width, height))
     }
-
 
 }
 

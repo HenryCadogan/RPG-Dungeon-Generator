@@ -9,6 +9,7 @@ import grammar.grammarItems.enemies.EnemyFactory
 import grammar.grammarItems.factories.DungeonRoomFactory
 import grammar.grammarItems.factories.ItemsFactory
 import grammar.grammarItems.factories.TrappedRoomFactory
+import grammar.operators.oneOf
 import javafx.application.Platform
 import javafx.beans.property.*
 import javafx.event.EventHandler
@@ -213,12 +214,12 @@ class MainMenu : View("Dungeon Generator Settings") {
 
 class MyController : Controller() {
     val themes = Theme.values().toList()
-    private val dungeon = Dungeon()
     private val random = Random
     private val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
     fun generateMap(constraints: DungeonConstraints, saveLocation: String) {
         setConstraints(constraints)
+        val dungeon = Dungeon()
         val text = dungeon.generate()
         val image = dungeon.draw()
         val name = (1..10)
@@ -243,8 +244,12 @@ class MyController : Controller() {
 
 
     private fun setConstraints(c: DungeonConstraints) {
-        Constraints.theme = c.dungeonTheme
-        createFactories(c.dungeonTheme)
+        Constraints.theme = if (c.dungeonTheme == Theme.RANDOM){
+            Theme.values().toList().oneOf()
+        } else {
+         c.dungeonTheme
+        }
+        createFactories(Constraints.theme)
         setRoomConstraints(c.roomCount, c.roomSparsity, c.trappedPercentage, c.roomSize, c.roomConnectivity)
         setEnemyConstraints(c.maxEnemiesPerRoom, c.enemySparsity)
     }
