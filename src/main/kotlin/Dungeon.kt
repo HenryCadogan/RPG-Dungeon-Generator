@@ -22,9 +22,9 @@ import kotlin.random.nextInt
 
 class Dungeon {
 
-    private var rooms = mutableListOf<GrammarItem>() 
-    private val enemies = mutableListOf<Enemy>()
-    private val locksAndKeys = mutableListOf<LockedContainerAndKey>()
+    private var rooms = mutableListOf<GrammarItem>()
+    internal val enemies = mutableListOf<Enemy>()
+    internal val locksAndKeys = mutableListOf<LockedContainerAndKey>()
 
     private val roomGrammar = Grammar(roomRules)
     private val itemGrammar = Grammar(itemRules)
@@ -32,32 +32,34 @@ class Dungeon {
     private val lootGrammar = Grammar(lootRules)
     private val drawer = DungeonDrawer(Constraints.theme)
 
-    private var plots= listOf<Plot>()
+    private var plots = listOf<Plot>()
     private var plotSize = (Constraints.rooms.maxRoomSize * 1.5).roundToInt()
 
+    fun getRooms() = rooms.map { it as DungeonRoom }
 
-
-    fun getRooms() = rooms.map{it as DungeonRoom}
-
-    private fun makeRoomTree(){
+    private fun makeRoomTree() {
         val leaves = mutableListOf<DungeonRoom>()
         leaves.add(rooms.oneOf() as DungeonRoom)
         val unvisited = rooms.map { it as DungeonRoom } as MutableList<DungeonRoom>
 
-        while(leaves.isNotEmpty()) {
+        while (leaves.isNotEmpty()) {
             val toBeRemoved = mutableListOf<DungeonRoom>()
             for (i in 0 until leaves.size) {
                 val leaf = leaves[i]
                 toBeRemoved.add(leaf)
-                if (leaf.rightChiLd != null && leaf.leftChiLd != null){break}
+                if (leaf.rightChiLd != null && leaf.leftChiLd != null) {
+                    break
+                }
 
                 val rc = leaf.getNearestRoom(unvisited)
                 leaf.rightChiLd = rc
                 leaves.add(rc)
                 val unvisitedMinusRc = unvisited.filter { it.id != rc.id }
-                if (unvisitedMinusRc.isEmpty()){break}
+                if (unvisitedMinusRc.isEmpty()) {
+                    break
+                }
 
-                if (Random.nextInt(1,100)<Constraints.rooms.connectivityThreshold) {
+                if (Random.nextInt(1, 100) < Constraints.rooms.connectivityThreshold) {
                     val lc = leaf.getNearestRoom(unvisitedMinusRc)
                     leaf.leftChiLd = lc
                     leaves.add(lc)
@@ -70,9 +72,9 @@ class Dungeon {
     }
 
 
-    private fun determineLocations(){
+    private fun determineLocations() {
         plots = calculatePlots(getRooms().size, plotSize)
-        for (roomNumber in 0 until rooms.size){
+        for (roomNumber in 0 until rooms.size) {
             val room = rooms[roomNumber] as DungeonRoom
             val plot = plots[roomNumber]
             val buffer = Constraints.rooms.minroomDistance
@@ -83,10 +85,10 @@ class Dungeon {
     }
 
     private fun calculatePlots(roomCount: Int, plotSize: Int): List<Plot> {
-        val numPlots = if (roomCount <=5) {
+        val numPlots = if (roomCount <= 5) {
             roomCount
         } else {
-            roomCount/2
+            roomCount / 2
         }
 
         val plots = mutableListOf<Plot>()
@@ -95,7 +97,6 @@ class Dungeon {
             for (x in 0 until numPlots) {
                 index++
                 plots.add(Plot(index, x * plotSize, y * plotSize, plotSize, plotSize))
-                println("Made plot at ${x * plotSize} ${y * plotSize} with index $index")
             }
         }
 
@@ -108,109 +109,84 @@ class Dungeon {
         return plotsToUse.sortedBy { it.index }
     }
 
-    fun draw(): BufferedImage {
-        val imageSize = (plots.size * plotSize)
-        return drawer.drawDungeon(this,imageSize)
+    private fun moveKeys() {
+        getRooms().forEach { room ->
+            val lockedItems = room.roomObjects.filter { it is LockedContainerAndKey }.map { it as LockedContainerAndKey }
+            if (lockedItems.isNotEmpty()) {
+                var newRoomID: String
+                for (item in lockedItems) {
+                    val roomToMoveTo = getRooms().filter { it != room }.oneOf()
+                    val roomContainers = roomToMoveTo.roomObjects.filter { it is Container }
+                    if (roomContainers.isNotEmpty()) {
+                        val c = roomContainers.oneOf() as Container
+                        c.contents.add(item.key)
+                        item.key.description = item.key.description.plus("This unlocks the ${item.container.data.name} in room ${room.id}. ")
+
+                    } else {
+                        //todo make a method to hide things randomly or some such
+                        roomToMoveTo.roomObjects.add(item.key)
+                        item.key.description = item.key.description.plus("This unlocks the ${item.container.data.name} in room ${room.id}, it is hidden somewhere in this room. Use your imagination as to where and the difficulty. ")
+
+                    }
+                    newRoomID = roomToMoveTo.id
+                    item.container.data.description = item.container.data.description.plus("The key for this is the ${item.key.simpleName} in room $newRoomID. ")
+                }
+
+            }
+
+        }
     }
 
+    fun draw(): BufferedImage {
+        val imageSize = (plots.size * plotSize)
+        return drawer.drawDungeon(this, imageSize)
+    }
 
 
     fun generate(): String {
         //todo split this into generation and then description in two functions
-        val sb = StringBuilder()
+        generateContents()
+        determineLocations()
+        makeRoomTree()
+        moveKeys()
+        val descriptionCreator = DescriptionCreator(this)
+        return descriptionCreator.generateDescription()
+    }
 
-        rooms = roomGrammar.generate(listOf(StartItem())).map{it as DungeonRoom}.toMutableList()
-        for (x in 0 until rooms.size){
+
+    private fun generateContents() {
+        rooms = roomGrammar.generate(listOf(StartItem())).map { it as DungeonRoom }.toMutableList()
+        for (x in 0 until rooms.size) {
             val r = rooms[x] as DungeonRoom
             r.id = x.toString()
         }
 
-        determineLocations()
-        makeRoomTree()
+        for (d in getRooms()) {
+            d.roomObjects = itemGrammar.generate(listOf(ItemPlaceholder())).toMutableList()
 
-        sb.appendln("Components are")
-
-        for (d in rooms) {
-            d as DungeonRoom
-            sb.appendln("Room ${d.id}: ${d.description}")
-            d.roomObjects = itemGrammar.generate(listOf(ItemPlaceholder()))
-
-            val enemiesForRoom = enemyGrammar.generate(listOf(EnemyPlaceholder())).map { it as Enemy }
-            d.roomEnemies = enemiesForRoom
-            enemies.addAll(enemiesForRoom)
-            if (enemiesForRoom.isNotEmpty()) {
-                sb.appendln("   Enemies:")
-                enemiesForRoom.forEach {
-                    sb.appendln("       ${it.data.name}")
-                }
-            }
             if (d.roomObjects.isNotEmpty()) {
-                sb.appendln("   Items:")
                 d.roomObjects.forEach {
                     when (it) {
                         is Container -> {
-                            it.contents = lootGrammar.generate(it.contents)
-                            val name = it.data.name
-                            if (!it.contents.isEmpty()) {
-                                sb.appendln("       This room has $name in it")
-
-                                val items = it.contents.map { i ->
-                                    when (i) {
-                                        is Item -> i.name
-                                        is Money -> i.toPrettyString()
-                                        else -> ""
-                                    }
-                                }
-                                sb.appendln("         Containing: $items")
-                            } else {
-                                sb.appendln("         An empty $name")
-                            }
+                            it.contents = lootGrammar.generate(it.contents).toMutableList()
                         }
                         is LockedContainerAndKey -> {
-                            locksAndKeys.add(it)
-                            //todo place key somewhere else and reference it here...
-                            sb.appendln("         ${it.container.data.description}")
-                            sb.appendln("         The containers Key is ${it.key.description}")
-                        }
-                        is Weapon -> {
-                            sb.appendln("         ${it.data.name}")
-                            sb.appendln("               Damage: ${it.data.damage}")
-                            sb.appendln("               Value: ${it.data.value.toPrettyString()}")
-                            sb.appendln("               Description: ${it.data.description}")
+                            it.container.contents = lootGrammar.generate(it.container.contents)
                         }
                     }
                 }
             }
-            sb.appendln("----------------------------------------------------------------")
-        }
-        val monsterAppendix = makeEnemyAppendix()
-        return sb.appendln(monsterAppendix).toString()
-    }
 
-    private fun makeEnemyAppendix(): String {
-        val sb = StringBuilder()
-        sb.appendln("Details for enemies in this dungeon:")
-        enemies.distinctBy { it.data.name }.forEach {
-            val data = it.data
-            sb.appendln("Creature Name = ${data.name}\n")
-            sb.appendln("Full information can be found on page ${data.pageNum} of the monster manual\n")
-            sb.appendln("Armour Rating = ${data.armour}\n")
-            sb.appendln("Max Health = ${data.health}\n")
-            //todo change enemies to be single constructor that takes a list of Attack objects then change this to iterate over the list
-            sb.appendln("Primary Attack = ${data.firstAttackName} dealing: ${data.firstAttackDamage}\n")
-            if (data.secondAttackName != null) {
-                sb.appendln("Secondary Attack = ${data.secondAttackName} dealing: ${data.secondAttackDamage}\n")
-            }
-            sb.appendln("----------------------------------------------------------------")
+            val enemiesForRoom = enemyGrammar.generate(listOf(EnemyPlaceholder())).map { it as Enemy }
+            d.roomEnemies = enemiesForRoom
+            enemies.addAll(enemiesForRoom)
         }
-        return sb.toString()
     }
-
 
 }
 
 data class Plot(
-        val index : Int,
+        val index: Int,
         val x: Int,
         val y: Int,
         val width: Int,

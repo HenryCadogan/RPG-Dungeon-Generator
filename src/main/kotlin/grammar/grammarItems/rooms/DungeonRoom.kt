@@ -16,7 +16,7 @@ open class DungeonRoom(
             width = Random.nextInt((40..Constraints.rooms.maxRoomSize))
     )
     var roomEnemies = listOf<Enemy>()
-    var roomObjects = listOf<GrammarItem>()
+    var roomObjects = mutableListOf<GrammarItem>()
     internal var trapped: Boolean = false
     open lateinit var description: String
     lateinit var id: String

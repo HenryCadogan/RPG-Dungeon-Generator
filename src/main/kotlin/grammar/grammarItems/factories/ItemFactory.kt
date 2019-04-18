@@ -54,7 +54,7 @@ class ItemsFactory(private val rnd: Random):GrammarItemFactory {
         val keyAndLock = keysAndLocks.items.oneOf()
 
         val vData = container.variantData
-        var newData:ContainerVariant
+        val newData:ContainerVariant
         if (vData is ContainerVariant) {
             newData = ContainerVariant(
                     maxDC = vData.maxDC,
@@ -67,7 +67,8 @@ class ItemsFactory(private val rnd: Random):GrammarItemFactory {
             throw RuntimeException("Variant data for Container object is not ContainerVariant, instead is ${vData::class}")
         }
         val lockedContainer = LockedContainer(data = newData )
-        return LockedContainerAndKey(container = lockedContainer , key = Key(keyAndLock.key))
+
+        return LockedContainerAndKey(container = lockedContainer , key = keyAndLock.key)
     }
 
     fun generateMiscItem(type:MiscItemCategory): Item {
@@ -99,7 +100,7 @@ class ItemsFactory(private val rnd: Random):GrammarItemFactory {
 }
 
 data class Container(val data: ContainerVariant,
-                     internal var contents: List<GrammarItem> = listOf(TreasurePlaceholder())
+                     internal var contents: MutableList<GrammarItem> = mutableListOf(TreasurePlaceholder())
 ) : Item(ItemType.CONTAINER, data, data.name)
 
 data class LockedContainer(val data: ContainerVariant,
@@ -107,8 +108,9 @@ data class LockedContainer(val data: ContainerVariant,
 ) : Item(ItemType.CONTAINER, data, data.name)
 
 data class Key(
-        val description:String
-)
+        var description:String,
+        val simpleName:String
+):GrammarItem(true)
 
 data class LockedContainerAndKey(
         val container: LockedContainer,
@@ -119,7 +121,7 @@ data class KeysAndLocks(
         val items:List<KeyAndLock>
 ) {
     data class KeyAndLock(
-            val key:String,
+            val key:Key,
             val lock:String
     )
 }

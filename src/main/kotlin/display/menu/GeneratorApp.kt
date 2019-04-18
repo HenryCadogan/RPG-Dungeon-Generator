@@ -24,6 +24,7 @@ import sun.misc.Signal.handle
 import tornadofx.FX.Companion.primaryStage
 import java.awt.Desktop
 import java.io.File
+import java.io.IOException
 import javax.imageio.ImageIO
 
 
@@ -225,12 +226,18 @@ class MyController : Controller() {
                 .map(charPool::get)
                 .joinToString("")
 
-        val imageFile = File("${saveLocation}\\Dungeon$name")
-        val textFile = File("${saveLocation}\\Dungeon$name.txt")
+        val imageFile = File("$saveLocation\\Dungeon$name.png")
+        val textFile = File("$saveLocation\\Dungeon$name.txt")
         textFile.writeText(text)
         ImageIO.write(image, "png", imageFile)
         val desktop = Desktop.getDesktop()
-        desktop.open(imageFile.absoluteFile)
+        try {
+            desktop.open(imageFile)
+        }catch(e: IOException){
+            desktop.edit(imageFile)
+        }catch(e:IOException){
+            //todo do something else here rather than hide the error
+        }
         desktop.open(textFile)
     }
 

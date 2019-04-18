@@ -19,7 +19,7 @@ import grammar.operators.oneOrMore
 import grammar.operators.or
 import kotlin.random.Random
 
-object Rules{
+object Rules {
     private val rnd = Random
     private val ops = GrammarOperators(rnd)
 
@@ -28,8 +28,8 @@ object Rules{
                     lhs = DungeonRoom::class,
                     rhs = {
                         ops.oneOf.oneOf(mapOf(
-                                Factories.roomFactory.terminal() to (1 - Constraints.rooms.trappedRoomPercentage*100).toInt(),
-                                Factories.trappedRoomFactory.terminal() to (Constraints.rooms.trappedRoomPercentage*100).toInt()
+                                Factories.roomFactory.terminal() to ((1 - Constraints.rooms.trappedRoomPercentage) * 100).toInt(),
+                                Factories.trappedRoomFactory.terminal() to ((Constraints.rooms.trappedRoomPercentage) * 100).toInt()
                         ))
                     }
             ),
@@ -48,12 +48,16 @@ object Rules{
                     rhs = {
                         Factories.itemFactory.generateContainer(
                                 size = ItemSize.values().toList().oneOf(),
-                                type = ContainerCategory.CHEST).oneOrMore(3) or
+                                type = ContainerCategory.CHEST
+                        ).oneOrMore(3) or
                                 Factories.itemFactory.generateWeapon(
                                         size = ItemSize.SMALL,
                                         type = WeaponCategory.WAND
                                 ) or
-                                Factories.itemFactory.generateLockedContainerAndKey(ItemSize.values().toList().oneOf(),ContainerCategory.values().toList().oneOf()) or
+                                Factories.itemFactory.generateLockedContainerAndKey(
+                                        ItemSize.values().toList().oneOf(),
+                                        ContainerCategory.values().toList().oneOf()
+                                ) or
                                 emptyList()
                     }
             )
@@ -71,6 +75,7 @@ object Rules{
                     }
             ),
             ProductionRule(
+                    //room here to expand into different classes of enemy, maybe boss type enemies
                     lhs = Enemy::class,
                     rhs = {
                         listOf(Factories.enemyFactory.terminal()) or emptyList()

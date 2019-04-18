@@ -71,11 +71,9 @@ class DungeonDrawer(val theme: Theme) {
             val lc = room.leftChiLd
             val rc = room.rightChiLd
             if (lc != null) {
-                println("Connecting ${room.id} to ${lc.id}")
                 drawCorridorBetweenPoints(room.center, lc.center, g2D)
             }
             if (rc != null) {
-                println("Connecting ${room.id} to ${rc.id}")
                 drawCorridorBetweenPoints(room.center, rc.center, g2D)
             }
         }

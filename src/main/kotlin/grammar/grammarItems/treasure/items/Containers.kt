@@ -21,5 +21,5 @@ data class ContainerVariant(
         val minDC: Int,
         val name: String,
         val size: ItemSize,
-        val description: String
+        var description: String
 )
