@@ -4,9 +4,45 @@
       "ThemeName": "AQUATIC",
       "trapList": [
         {
-          "description" : "Description of trap in aquatic room"
+          "description" : "There is a loose stone on the floor of the room. Any player with a passive perception of 14 or higher will notice this but not know what it does. Any tampering with this stone causes the doors to seal with stones and water to start gushing in from holes in each wall and the ceiling. A player must succeed on a DC 12 intelligence check to know that they have only a few minutes before they are completely submerged. Any player that searches for a plug of sorts must succeed on a DC 10 perception check to see that there is a stone in the floor where some water is flowing through. (The water does not flow infinitely, it comes from a reservoir) "
+        }
+      ]
+    },
+    {
+      "ThemeName": "FORESTRY",
+      "trapList": [
+        {
+          "description" : "The door into this room does not stay open on its own. When it shuts, it locks and causes the following to occur: Any players in the room must make a DC 15 dexteritay saving throw or be hit by 1d4 (2) poison darts dealing 1d4 (2) piercing damage per dart. The characters must also make a DC 15 constitution saving throw to see if they are poisoned, on a fail they take 2d10 poison damage and half as much on a success. This effect is triggered every time the door closes, so the players must figure out that they need to keep it open. "
+        },
+        {
+          "description" : "There is a section of the floor in this room cleverly camouflaged with leaves and vines that covers a spike trap. Any player that steps on the leaves will fall 10ftr down taking 2d10 piercing damage as they hit the spikes at the bottom. They will also need to make a DC 15 strength check to climb back out. "
+        }
+      ]
+    },
+    {
+      "ThemeName": "UNDEAD",
+      "trapList": [
+        {
+          "description" : "Description of trap in undead room. "
+        }
+      ]
+    },
+    {
+      "ThemeName": "DRAGON",
+      "trapList": [
+        {
+          "description" : "Description of trap in dragon room. "
+        }
+      ]
+    },
+    {
+      "ThemeName": "HUMANOID",
+      "trapList": [
+        {
+          "description" : "Description of trap in humanoid room"
         }
       ]
     }
+
   ]
 }

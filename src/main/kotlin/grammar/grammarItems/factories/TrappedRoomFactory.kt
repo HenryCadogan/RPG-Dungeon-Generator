@@ -27,8 +27,6 @@ class TrappedRoomFactory : DungeonRoomFactory(Constraints.theme) {
 
     private fun genTrappedRoom(terminal: Boolean): TrappedRoom {
         val room = TrappedRoom(terminal)
-        val identifier = ID.count++.toString()
-        println("Made new room with id $identifier")
         room.trapped = true
         room.description = determineTrapDescription()
         return room

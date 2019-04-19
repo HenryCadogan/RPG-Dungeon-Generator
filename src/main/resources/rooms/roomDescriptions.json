@@ -4,26 +4,134 @@
       "name": "AQUATIC",
       "walls": [
         {
-          "description": "Description of the Aquatic walls 1. "
+          "description": "The walls have a steady flow of water trickling down them in this room. "
         },
         {
-          "description": "Description of the Aquatic walls 2. "
+          "description": "There are small crustaceans over the walls. "
         }
       ],
       "floor": [
         {
-          "description": "Description of the Aquatic floors 1. "
+          "description": "The floor is covered by half a foot of water, players must take disadvantage to any stealth rolls in this room. "
         },
         {
-          "description": "Description of the Aquatic floors 2. "
+          "description": "The floor is sandy and covered in rock pools. "
         }
       ],
       "ceiling": [
         {
-          "description": "Description of the Aquatic ceiling 1. "
+          "description": "The ceiling is peppered with small stalactites mainly comprised of salt and minerals from the water. "
         },
         {
-          "description": "Description of the Aquatic ceiling 2. "
+          "description": "The ceiling in this room is much higher than normal and occasionally drips water onto the floor. These drops give an eerie ambiance to the room. "
+        }
+      ]
+    },
+    {
+      "name": "FORESTRY",
+      "walls": [
+        {
+          "description": "Description of the Forestry walls 1. "
+        },
+        {
+          "description": "Description of the Forestry walls 2. "
+        }
+      ],
+      "floor": [
+        {
+          "description": "Description of the Forestry floors 1. "
+        },
+        {
+          "description": "Description of the Forestry floors 2. "
+        }
+      ],
+      "ceiling": [
+        {
+          "description": "Description of the Forestry ceiling 1. "
+        },
+        {
+          "description": "Description of the Forestry ceiling 2. "
+        }
+      ]
+    },
+    {
+      "name": "DRAGON",
+      "walls": [
+        {
+          "description": "Description of the Forestry walls 1. "
+        },
+        {
+          "description": "Description of the Forestry walls 2. "
+        }
+      ],
+      "floor": [
+        {
+          "description": "Description of the Forestry floors 1. "
+        },
+        {
+          "description": "Description of the Forestry floors 2. "
+        }
+      ],
+      "ceiling": [
+        {
+          "description": "Description of the Forestry ceiling 1. "
+        },
+        {
+          "description": "Description of the Forestry ceiling 2. "
+        }
+      ]
+    },
+    {
+      "name": "UNDEAD",
+      "walls": [
+        {
+          "description": "Description of the Forestry walls 1. "
+        },
+        {
+          "description": "Description of the Forestry walls 2. "
+        }
+      ],
+      "floor": [
+        {
+          "description": "Description of the Forestry floors 1. "
+        },
+        {
+          "description": "Description of the Forestry floors 2. "
+        }
+      ],
+      "ceiling": [
+        {
+          "description": "Description of the Forestry ceiling 1. "
+        },
+        {
+          "description": "Description of the Forestry ceiling 2. "
+        }
+      ]
+    },
+    {
+      "name": "HUMANOID",
+      "walls": [
+        {
+          "description": "Description of the Forestry walls 1. "
+        },
+        {
+          "description": "Description of the Forestry walls 2. "
+        }
+      ],
+      "floor": [
+        {
+          "description": "Description of the Forestry floors 1. "
+        },
+        {
+          "description": "Description of the Forestry floors 2. "
+        }
+      ],
+      "ceiling": [
+        {
+          "description": "Description of the Forestry ceiling 1. "
+        },
+        {
+          "description": "Description of the Forestry ceiling 2. "
         }
       ]
     }

@@ -19,6 +19,8 @@ import kotlin.random.nextInt
 
 class DungeonDrawer(val theme: Theme) {
 
+    private val corridorWidth = 12
+
     fun drawDungeon(dungeon: Dungeon,imageSize:Int): BufferedImage {
         val imageWidth = imageSize/2
         val imageHeight = imageSize/2
@@ -85,11 +87,11 @@ class DungeonDrawer(val theme: Theme) {
         val angle =  a.angleTo(b)
         val length = a.distanceTo(b)
         val oldg2D = g2D.transform
-        g2D.paint = getCorridorTexture(6,length.roundToInt())
+        g2D.paint = getCorridorTexture(corridorWidth,length.roundToInt())
         g2D.rotate(angle+Math.PI*0.5, a.x.toDouble(),a.y.toDouble())
-        g2D.fillRect(a.x,a.y,6,length.roundToInt())
+        g2D.fillRect(a.x,a.y,corridorWidth,length.roundToInt())
         g2D.color = Color.BLACK
-        g2D.drawRect(a.x,a.y,6,length.roundToInt())
+        g2D.drawRect(a.x,a.y,corridorWidth,length.roundToInt())
         g2D.transform = oldg2D
     }
 

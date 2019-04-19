@@ -13,7 +13,9 @@ import grammar.operators.oneOf
 import javafx.application.Platform
 import javafx.beans.property.*
 import javafx.event.EventHandler
+import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.control.ButtonBar
 import javafx.scene.control.Slider
 
 import kotlin.random.Random
@@ -91,19 +93,19 @@ class MainMenu : View("Dungeon Generator Settings") {
                             combobox(property = dungeonTheme, values = myController.themes.observable()).required()
                         }
                         field("Room Sparsity") {
-                            hbox(20) {
+                            hbox(10) {
                                 this.add(sparsitySlider)
                                 this.add(sparsityLabel)
                             }
                         }
                         field("Trapped Room Percentage") {
-                            hbox(20) {
+                            hbox(10) {
                                 this.add(trappedSlider)
                                 this.add(trappedLabel)
                             }
                         }
                         field("Connectivity") {
-                            hbox(20) {
+                            hbox(10) {
                                 this.add(connectivitySlider)
                                 this.add(connectivityLabel)
                             }
@@ -122,7 +124,7 @@ class MainMenu : View("Dungeon Generator Settings") {
                             }
 
                             field("Enemy Sparsity") {
-                                hbox(20) {
+                                hbox {
                                     this.add(enemiesSlider)
                                     this.add(enemiesLabel)
                                 }
@@ -134,15 +136,16 @@ class MainMenu : View("Dungeon Generator Settings") {
         }
 
         buttonbar {
-                button("Save Directory") {
-                    action {
-                        val dir = chooseDirectory("Select Save Directory").toString()
-                        if (dir != "null") {
-                            saveDirectory.value = dir
-                            saveDirectoryLabel.text = dir
-                        }
+            padding = Insets(0.0, 20.0, 10.0, 20.0)
+            button("Select Save Directory", ButtonBar.ButtonData.LEFT) {
+                action {
+                    val dir = chooseDirectory("Select Save Directory").toString()
+                    if (dir != "null") {
+                        saveDirectory.value = dir
+                        saveDirectoryLabel.text = dir
                     }
                 }
+            }
             button("Generate!") {
 
                 enableWhen(model.valid)
@@ -163,22 +166,26 @@ class MainMenu : View("Dungeon Generator Settings") {
                         )
                         println(constraints)
                         println(saveDirectory.value)
-                        myController.generateMap(constraints,saveDirectory.value)
+                        myController.generateMap(constraints, saveDirectory.value)
                     }
                 }
                 vboxConstraints {
-                    marginLeft = 20.0
                     marginTopBottom(20.0)
                 }
+
             }
         }
+        hbox {
+            padding = Insets(0.0, 20.0, 0.0, 20.0)
+            label { text = "Current Save Location:   " }
+            this.add(saveDirectoryLabel)
 
-        this.add(saveDirectoryLabel)
+        }
     }
 
     init {
         //add initial values to model in case the user does not change them
-        roomConnectivity.value = connectivitySlider.value*100
+        roomConnectivity.value = connectivitySlider.value * 100
         roomCount.value = 10
         roomSparsity.value = sparsitySlider.value
         trappedPercentage.value = trappedSlider.value
@@ -200,7 +207,7 @@ class MainMenu : View("Dungeon Generator Settings") {
             trappedLabel.text = (new_val.toDouble() * 100).toInt().toString()
         }
         connectivitySlider.valueProperty().addListener { _, _, new_val ->
-            roomConnectivity.value = (new_val.toDouble()*100).toInt()
+            roomConnectivity.value = (new_val.toDouble() * 100).toInt()
             connectivityLabel.text = (new_val.toDouble() * 100).toInt().toString()
         }
 
@@ -234,9 +241,9 @@ class MyController : Controller() {
         val desktop = Desktop.getDesktop()
         try {
             desktop.open(imageFile)
-        }catch(e: IOException){
+        } catch (e: IOException) {
             desktop.edit(imageFile)
-        }catch(e:IOException){
+        } catch (e: IOException) {
             //todo do something else here rather than hide the error
         }
         desktop.open(textFile)
@@ -244,10 +251,10 @@ class MyController : Controller() {
 
 
     private fun setConstraints(c: DungeonConstraints) {
-        Constraints.theme = if (c.dungeonTheme == Theme.RANDOM){
+        Constraints.theme = if (c.dungeonTheme == Theme.RANDOM) {
             Theme.values().toList().oneOf()
         } else {
-         c.dungeonTheme
+            c.dungeonTheme
         }
         createFactories(Constraints.theme)
         setRoomConstraints(c.roomCount, c.roomSparsity, c.trappedPercentage, c.roomSize, c.roomConnectivity)

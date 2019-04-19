@@ -1,7 +1,10 @@
 {
   "features": [
     {
-      "description": "Description of some interesting feature. "
+      "description": "This room has intricate etchings in the walls. These etchings are filled with a strange blue liquid that glows dimly in low light. (This is non magical and purely aesthetic)"
+    },
+    {
+      "description": "Hidden somewhere in this room is a badly drawn map of this dungeon that a player can look at and get an understanding of what may lie ahead of them."
     }
   ]
 }
