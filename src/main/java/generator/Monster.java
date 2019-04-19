@@ -2,18 +2,18 @@ package generator;
 
 public class Monster {
 
-	String name;
-	String firstAttackName;
-	String firstDamage;
-	String secondAttackName;
-	String secondDamage;
-	
-	double combatRating;
-	
-	int hp;
-	int attBonus;
-	int ac;
-	int pageNumber;
+	private String name;
+	private String firstAttackName;
+	private String firstDamage;
+	private String secondAttackName;
+	private String secondDamage;
+
+	private double combatRating;
+
+	private int hp;
+	private int attBonus;
+	private int ac;
+	private int pageNumber;
 	
 	/**
 	 * Constructor used for creating a new monster. Use this one if it has a second attack.
@@ -29,8 +29,8 @@ public class Monster {
 	 * @param ac - Armour class of monster
 	 * @param pageNumber - What page in the generator.Monster Manual you find the monster
 	 */
-	public Monster (String name, String firstAttackName, String firstDamage, String secondAttackName,
-						String secondDamage, double cr, int hp, int attBonus, int ac, int pageNumber){
+	Monster(String name, String firstAttackName, String firstDamage, String secondAttackName,
+			String secondDamage, double cr, int hp, int attBonus, int ac, int pageNumber){
 		
 		this.name = name;
 		this.firstAttackName = firstAttackName;
@@ -57,7 +57,7 @@ public class Monster {
 	 * @param ac
 	 * @param pageNumber
 	 */
-	public Monster (String name, String firstAttackName, String firstDamage, double cr, int hp, int attBonus, int ac, int pageNumber){
+	Monster (String name, String firstAttackName, String firstDamage, double cr, int hp, int attBonus, int ac, int pageNumber){
 
 		this.name = name;
 		this.firstAttackName = firstAttackName;
