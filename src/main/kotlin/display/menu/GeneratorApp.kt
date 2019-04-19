@@ -9,6 +9,7 @@ import grammar.grammarItems.enemies.EnemyFactory
 import grammar.grammarItems.factories.DungeonRoomFactory
 import grammar.grammarItems.factories.ItemsFactory
 import grammar.grammarItems.factories.TrappedRoomFactory
+import grammar.grammarItems.treasure.money.MoneyValue
 import grammar.operators.oneOf
 import javafx.application.Platform
 import javafx.beans.property.*
@@ -23,7 +24,6 @@ import javafx.scene.control.Label
 import javafx.scene.control.TabPane
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
-import sun.misc.Signal.handle
 import tornadofx.FX.Companion.primaryStage
 import java.awt.Desktop
 import java.io.File
@@ -47,7 +47,8 @@ class GeneratorApp : App() {
 class MainMenu : View("Dungeon Generator Settings") {
     private val model = ViewModel()
 
-    private val roomCount = model.bind { SimpleIntegerProperty() }
+    private val maxRoomCount = model.bind { SimpleIntegerProperty() }
+    private val minRoomCount = model.bind { SimpleIntegerProperty() }
     private val roomSparsity = model.bind { SimpleDoubleProperty() }
 
     private val trappedPercentage = model.bind { SimpleFloatProperty() }
@@ -60,18 +61,28 @@ class MainMenu : View("Dungeon Generator Settings") {
     private val saveDirectoryLabel = Label()
 
     private val maxEnemiesPerRoom = model.bind { SimpleIntegerProperty() }
+    private val minEnemiesPerRoom = model.bind { SimpleIntegerProperty() }
     private val enemySparsity = model.bind { SimpleFloatProperty() }
-
 
     private val sparsitySlider = Slider(0.0, 1.0, 0.5)
     private val sparsityLabel = Label((sparsitySlider.value * 100).toInt().toString())
     private val trappedSlider = Slider(0.0, 1.0, 0.2)
     private val trappedLabel = Label((trappedSlider.value * 100).toInt().toString())
-    private val connectivitySlider = Slider(0.0, 1.0, 0.3)
+    private val connectivitySlider = Slider(0.0, 0.5, 0.25)
     private val connectivityLabel = Label((connectivitySlider.value * 100).toInt().toString())
 
     private val enemiesSlider = Slider(0.0, 1.0, 0.5)
     private val enemiesLabel = Label((enemiesSlider.value * 100).toInt().toString())
+
+    private val minContainersPerRoom = model.bind { SimpleIntegerProperty() }
+    private val maxContainersPerRoom = model.bind { SimpleIntegerProperty() }
+
+    private val minItemsOfLootPerRoom = model.bind { SimpleIntegerProperty() }
+    private val maxItemsOfLootPerRoom = model.bind { SimpleIntegerProperty() }
+
+    private val moneyValuePerPile = model.bind { SimpleObjectProperty<MoneyValue>() }
+
+    private val dungeonName = model.bind { SimpleStringProperty() }
 
     private val myController: MyController by inject()
 
@@ -81,11 +92,19 @@ class MainMenu : View("Dungeon Generator Settings") {
 
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
 
-            tab("Room Settings") {
+            tab("Rooms") {
                 form {
                     fieldset {
                         field("Max Number of rooms") {
-                            textfield(roomCount).required()
+                            textfield(maxRoomCount) {
+                                maxWidth = 30.0
+                            }.required()
+                        }
+                        field("Min Number of rooms") {
+                            textfield(minRoomCount) {
+                                maxWidth = 30.0
+                            }.required()
+
                         }
 
                         field("Theme") {
@@ -97,37 +116,80 @@ class MainMenu : View("Dungeon Generator Settings") {
                                 this.add(sparsitySlider)
                                 this.add(sparsityLabel)
                             }
-                        }
+                        }.tooltip { text = "Higher means closer to max number of rooms." }
                         field("Trapped Room Percentage") {
                             hbox(10) {
                                 this.add(trappedSlider)
                                 this.add(trappedLabel)
                             }
-                        }
+                        }.tooltip { text = "Percentage of rooms that will be trapped." }
                         field("Connectivity") {
                             hbox(10) {
                                 this.add(connectivitySlider)
                                 this.add(connectivityLabel)
                             }
-                        }.tooltip { text = "This value determines how many corridors connect the rooms together" }
+                        }.tooltip { text = "Higher means more corridors between the rooms, ideally leave this lower than 30." }
 
                     }
                 }
 
-                tab("Enemy Settings") {
-                    form {
+                tab("Enemies") {
+                    form() {
                         fieldset {
                             field("Max enemies per room") {
                                 textfield(maxEnemiesPerRoom) {
-                                    autosize()
+                                    maxWidth = 30.0
                                 }.required()
                             }
+                            field("Min enemies per room") {
+                                textfield(minEnemiesPerRoom) {
+                                    maxWidth = 30.0
+                                }.required()
 
-                            field("Enemy Sparsity") {
+                            }
+
+                            field("Enemy sparsity") {
                                 hbox {
                                     this.add(enemiesSlider)
                                     this.add(enemiesLabel)
                                 }
+                            }.tooltip { text = "Higher means closer to max enemies" }
+                        }
+                    }
+                }
+
+                tab("Treasure") {
+                    form {
+                        fieldset {
+                            field("Max containers per room") {
+                                textfield(property = maxContainersPerRoom) {
+                                    maxWidth = 30.0
+                                }.required()
+
+                            }
+
+                            field("Min containers per room") {
+                                textfield(minContainersPerRoom) {
+                                    maxWidth = 30.0
+                                }.required()
+                            }
+
+                            field("Max items of loot per room") {
+                                textfield(maxItemsOfLootPerRoom) {
+                                    maxWidth = 30.0
+                                }.required()
+
+                            }
+
+                            field("Min items of loot per room") {
+                                textfield(minItemsOfLootPerRoom) {
+                                    maxWidth = 30.0
+                                }.required()
+
+                            }
+
+                            field("Value of money per pile") {
+                                combobox(property = moneyValuePerPile, values = myController.moneyValues.observable()).required()
                             }
                         }
                     }
@@ -135,8 +197,22 @@ class MainMenu : View("Dungeon Generator Settings") {
             }
         }
 
+        vbox {
+            padding = Insets(0.0, 20.0, 0.0, 20.0)
+            hbox {
+                label { text = "Current Save Location:   " }
+                this.add(saveDirectoryLabel)
+            }
+
+            hbox {
+                padding = Insets(10.0, 0.0, 10.0, 0.0)
+                label { text = "Dungeon Name   " }
+                textfield(dungeonName).required(message = "Please enter a name for the dungeon")
+            }
+        }
+
         buttonbar {
-            padding = Insets(0.0, 20.0, 10.0, 20.0)
+            padding = Insets(10.0, 20.0, 10.0, 20.0)
             button("Select Save Directory", ButtonBar.ButtonData.LEFT) {
                 action {
                     val dir = chooseDirectory("Select Save Directory").toString()
@@ -155,18 +231,25 @@ class MainMenu : View("Dungeon Generator Settings") {
                     runAsyncWithProgress {
 
                         val constraints = DungeonConstraints(
-                                roomCount = roomCount.value.toInt(),
+                                maxRoomCount = maxRoomCount.value.toInt(),
+                                minRoomCount = minRoomCount.value.toInt(),
                                 roomSparsity = roomSparsity.value.toFloat(),
                                 trappedPercentage = trappedPercentage.value.toFloat(),
                                 roomSize = roomSize.value.toInt(),
                                 roomConnectivity = roomConnectivity.value.toInt(),
                                 dungeonTheme = dungeonTheme.value,
                                 maxEnemiesPerRoom = maxEnemiesPerRoom.value.toInt(),
-                                enemySparsity = enemySparsity.value.toFloat()
+                                minEnemiesPerRoom = minEnemiesPerRoom.value.toInt(),
+                                enemySparsity = enemySparsity.value.toFloat(),
+                                minContainersPerRoom = minContainersPerRoom.value.toInt(),
+                                maxContainersPerRoom = maxContainersPerRoom.value.toInt(),
+                                minItemsOfLootPerRoom = minContainersPerRoom.value.toInt(),
+                                maxItemsOfLootPerRoom = maxItemsOfLootPerRoom.value.toInt(),
+                                moneyValuePerPile = moneyValuePerPile.value
                         )
                         println(constraints)
                         println(saveDirectory.value)
-                        myController.generateMap(constraints, saveDirectory.value)
+                        myController.generateMap(constraints, saveDirectory.value,dungeonName.value)
                     }
                 }
                 vboxConstraints {
@@ -175,23 +258,25 @@ class MainMenu : View("Dungeon Generator Settings") {
 
             }
         }
-        hbox {
-            padding = Insets(0.0, 20.0, 0.0, 20.0)
-            label { text = "Current Save Location:   " }
-            this.add(saveDirectoryLabel)
 
-        }
     }
 
     init {
         //add initial values to model in case the user does not change them
         roomConnectivity.value = connectivitySlider.value * 100
-        roomCount.value = 10
+        maxRoomCount.value = 15
+        minRoomCount.value = 8
         roomSparsity.value = sparsitySlider.value
         trappedPercentage.value = trappedSlider.value
         enemySparsity.value = enemiesSlider.value
-        maxEnemiesPerRoom.value = 10
+        maxEnemiesPerRoom.value = 15
         roomSize.value = 100
+
+        maxItemsOfLootPerRoom.value = 3
+        minItemsOfLootPerRoom.value = 0
+        maxContainersPerRoom.value = 3
+        minContainersPerRoom.value = 0
+
 
         val defaultSaveLocation = System.getProperty("user.home") + "\\Documents"
         saveDirectory.value = defaultSaveLocation
@@ -221,21 +306,16 @@ class MainMenu : View("Dungeon Generator Settings") {
 
 class MyController : Controller() {
     val themes = Theme.values().toList()
+    val moneyValues = MoneyValue.values().toList()
     private val random = Random
-    private val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
-    fun generateMap(constraints: DungeonConstraints, saveLocation: String) {
+    fun generateMap(constraints: DungeonConstraints, saveLocation: String, saveName: String) {
         setConstraints(constraints)
         val dungeon = Dungeon()
         val text = dungeon.generate()
         val image = dungeon.draw()
-        val name = (1..10)
-                .map { i -> Random.nextInt(0, charPool.size) }
-                .map(charPool::get)
-                .joinToString("")
-
-        val imageFile = File("$saveLocation\\Dungeon$name.png")
-        val textFile = File("$saveLocation\\Dungeon$name.txt")
+        val imageFile = File("$saveLocation\\$saveName.png")
+        val textFile = File("$saveLocation\\$saveName.txt")
         textFile.writeText(text)
         ImageIO.write(image, "png", imageFile)
         val desktop = Desktop.getDesktop()
@@ -257,7 +337,7 @@ class MyController : Controller() {
             c.dungeonTheme
         }
         createFactories(Constraints.theme)
-        setRoomConstraints(c.roomCount, c.roomSparsity, c.trappedPercentage, c.roomSize, c.roomConnectivity)
+        setRoomConstraints(c.maxRoomCount, c.roomSparsity, c.trappedPercentage, c.roomSize, c.roomConnectivity)
         setEnemyConstraints(c.maxEnemiesPerRoom, c.enemySparsity)
     }
 
@@ -294,12 +374,19 @@ fun main() {
 }
 
 data class DungeonConstraints(
-        val roomCount: Int,
+        val maxRoomCount: Int,
+        val minRoomCount: Int,
         val roomSparsity: Float,
         val trappedPercentage: Float,
         val roomSize: Int,
         val roomConnectivity: Int,
         val dungeonTheme: Theme,
         val maxEnemiesPerRoom: Int,
-        val enemySparsity: Float
+        val minEnemiesPerRoom: Int,
+        val enemySparsity: Float,
+        val maxContainersPerRoom: Int,
+        val minContainersPerRoom: Int,
+        val minItemsOfLootPerRoom: Int,
+        val maxItemsOfLootPerRoom: Int,
+        val moneyValuePerPile: MoneyValue
 )

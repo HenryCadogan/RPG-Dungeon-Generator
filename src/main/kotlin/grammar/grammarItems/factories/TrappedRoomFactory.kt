@@ -2,7 +2,7 @@ package grammar.grammarItems.factories
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import grammar.Constraints
-import grammar.ID
+
 import grammar.grammarItems.GrammarItem
 import theme.Theme
 import grammar.grammarItems.rooms.TrappedRoom

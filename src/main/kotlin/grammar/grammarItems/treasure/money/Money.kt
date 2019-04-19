@@ -50,37 +50,52 @@ data class Money(
                 copper = pickFrom(1..100)
         )
 
-        fun lowValue() = Money(
+        private fun lowValue() = Money(
                 platinum = 0,
                 gold = pickFrom(1..3),
                 silver = pickFrom(1..50),
                 copper = pickFrom(1..100)
         )
 
-        fun moderateValue() = Money(
+        private fun moderateValue() = Money(
                 platinum = 0,
                 gold = pickFrom(3..10),
                 silver = pickFrom(1..100),
                 copper = pickFrom(1..100)
         )
 
-        fun highValue() = Money(
+        private fun highValue() = Money(
                 platinum = 0,
                 gold = pickFrom(10..15),
                 silver = pickFrom(1..100),
                 copper = pickFrom(1..100)
         )
 
-        fun motherload() = Money(
+        private fun hugeValue() = Money(
                 platinum = pickFrom(1..3),
                 gold = pickFrom(20..40),
                 silver = pickFrom(1..100),
                 copper = pickFrom(1..100)
         )
 
+        fun moneyFromValue(value: MoneyValue):Money{
+            return when (value){
+                MoneyValue.SMALL -> lowValue()
+                MoneyValue.MODERATE -> moderateValue()
+                MoneyValue.LARGE -> highValue()
+                MoneyValue.HUGE -> hugeValue()
+            }
+        }
         private fun pickFrom(intRange: IntRange) = oneOf.oneOf(intRange.toList()).first()
         private fun pickFrom(intList:List<Int>) = oneOf.oneOf(intList).first()
     }
 
 
+}
+
+enum class MoneyValue {
+    SMALL,
+    MODERATE,
+    LARGE,
+    HUGE
 }

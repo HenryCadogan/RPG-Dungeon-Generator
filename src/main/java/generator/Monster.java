@@ -24,10 +24,10 @@ public class Monster {
 	 * @param secondAttackName - Name of second attack
 	 * @param secondDamage - Second attack damage
 	 * @param cr - Challenge/Combat rating for monster
-	 * @param hp - Health Points of generator.Monster
+	 * @param hp - Health Points of Monster
 	 * @param attBonus - generator.Monster's attack bonus
 	 * @param ac - Armour class of monster
-	 * @param pageNumber - What page in the generator.Monster Manual you find the monster
+	 * @param pageNumber - What page in the Monster Manual you find the monster
 	 */
 	Monster(String name, String firstAttackName, String firstDamage, String secondAttackName,
 			String secondDamage, double cr, int hp, int attBonus, int ac, int pageNumber){

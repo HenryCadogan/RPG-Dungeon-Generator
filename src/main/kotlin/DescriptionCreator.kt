@@ -1,7 +1,7 @@
 import grammar.grammarItems.factories.*
 import grammar.grammarItems.treasure.money.Money
 
-class DescriptionCreator(val dungeon:Dungeon) {
+class DescriptionCreator(private val dungeon:Dungeon) {
 
     fun generateDescription(): String {
         val sb = StringBuilder()

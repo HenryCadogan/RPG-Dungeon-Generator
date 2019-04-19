@@ -13,6 +13,7 @@ import grammar.grammarItems.treasure.items.ContainerCategory
 import grammar.grammarItems.treasure.items.MiscItemCategory
 import grammar.grammarItems.treasure.items.WeaponCategory
 import grammar.grammarItems.treasure.money.Money
+import grammar.grammarItems.treasure.money.MoneyValue
 import grammar.operators.GrammarOperators
 import grammar.operators.oneOf
 import grammar.operators.oneOrMore
@@ -37,7 +38,7 @@ object Rules {
                     lhs = StartItem::class,
                     rhs = {
                         Factories.roomFactory.entranceRoomToDungeon() and ops.oneOrMore.oneOrMore(
-                                Factories.roomFactory.nonTerminal(), Constraints.rooms.maxRoomCount, Constraints.rooms.roomSparsity)
+                                Factories.roomFactory.nonTerminal(), Constraints.rooms.maxRoomCount,Constraints.rooms.minRoomCount, Constraints.rooms.roomSparsity)
                     }
             )
     )
@@ -46,10 +47,11 @@ object Rules {
             ProductionRule(
                     lhs = ItemPlaceholder::class,
                     rhs = {
+                        ops.oneOrMore.oneOrMore(
                         Factories.itemFactory.generateContainer(
                                 size = ItemSize.values().toList().oneOf(),
                                 type = ContainerCategory.CHEST
-                        ).oneOrMore(3) or
+                        ),limit = Constraints.containers.maxContainersPerRoom,min = Constraints.Containers.minContainersPerRoom,probability = 0.5f) or
                                 Factories.itemFactory.generateWeapon(
                                         size = ItemSize.SMALL,
                                         type = WeaponCategory.WAND
@@ -70,6 +72,7 @@ object Rules {
                         ops.oneOrMore.oneOrMore(
                                 item = (Factories.enemyFactory.terminal() or Factories.enemyFactory.nonTerminal()).first(),
                                 limit = Constraints.enemies.maxEnemiesPerRoom,
+                                min = Constraints.enemies.minEnemiesPerRoom,
                                 probability = Constraints.enemies.enemySparsity
                         )
                     }
@@ -87,13 +90,13 @@ object Rules {
             ProductionRule(
                     lhs = TreasurePlaceholder::class,
                     rhs = {
-                        ((Money.lowValue() and MiscItemPlaceholder()) or (ops.oneOrMore.oneOrMore(MiscItemPlaceholder(), 3, 70f)) or emptyList())
+                        ((Money.moneyFromValue(MoneyValue.SMALL) and MiscItemPlaceholder()) or (ops.oneOrMore.oneOrMore(MiscItemPlaceholder(), Constraints.loot.maxLootPerRoom, Constraints.loot.minLootPerRoom, 70f)) or emptyList())
                     }
             ),
             ProductionRule(
                     lhs = MiscItemPlaceholder::class,
                     rhs = {
-                        (Factories.itemFactory.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or emptyList() or Money.moderateValue())
+                        (Factories.itemFactory.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or emptyList() or Money.moneyFromValue(Constraints.loot.moneyValuePerPile))
                     }
             )
     )

@@ -12,7 +12,7 @@ open class DungeonRoom(
         terminal: Boolean = false
 ) : GrammarItem(terminal) {
     private val h = Random.nextInt(Constraints.rooms.minRoomSize..Constraints.rooms.maxRoomSize)
-    private val w = Random.nextInt(((h*0.8).toInt())..((h*1.2).toInt()))
+    private val w = Random.nextInt(((h*0.7).toInt())..((h*1.3).toInt()))
     var size = RoomSize(
             height =h,
             width = w

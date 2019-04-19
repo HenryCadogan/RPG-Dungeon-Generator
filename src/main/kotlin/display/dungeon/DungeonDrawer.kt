@@ -38,7 +38,7 @@ class DungeonDrawer(val theme: Theme) {
             val y = room.position.y
             val size = room.size
 
-            g2D.paint = getRoomTexture(size.width, size.height)
+            g2D.paint = getRoomTexture()
             g2D.fillRect(x, y, size.width, size.height)
             g2D.color = Color.BLACK
             g2D.drawRect(x, y, size.width, size.height)
@@ -87,7 +87,7 @@ class DungeonDrawer(val theme: Theme) {
         val angle =  a.angleTo(b)
         val length = a.distanceTo(b)
         val oldg2D = g2D.transform
-        g2D.paint = getCorridorTexture(corridorWidth,length.roundToInt())
+        g2D.paint = getCorridorTexture()
         g2D.rotate(angle+Math.PI*0.5, a.x.toDouble(),a.y.toDouble())
         g2D.fillRect(a.x,a.y,corridorWidth,length.roundToInt())
         g2D.color = Color.BLACK
@@ -96,22 +96,21 @@ class DungeonDrawer(val theme: Theme) {
     }
 
     private fun getBackGroundTexture(size: Int): TexturePaint {
-        //todo get the themed texture here
         val url = this::class.java.getResource("/textures/backgrounds/${theme.toString().toLowerCase()}/background.jpg")
         val texture = ImageIO.read(url)
         return TexturePaint(texture, Rectangle(size, size))
     }
 
-    private fun getRoomTexture(width: Int, height: Int): TexturePaint {
+    private fun getRoomTexture(): TexturePaint {
         val url = this::class.java.getResource("/textures/rooms/${theme.toString().toLowerCase()}/floor.jpg")
         val texture = ImageIO.read(url)
-        return TexturePaint(texture, Rectangle(width, height))
+        return TexturePaint(texture, Rectangle(texture.width/6, texture.height/6))
     }
 
-    private fun getCorridorTexture(width: Int, height: Int):TexturePaint{
+    private fun getCorridorTexture():TexturePaint{
         val url = this::class.java.getResource("/textures/corridors/${theme.toString().toLowerCase()}/corridor.jpg")
         val texture = ImageIO.read(url)
-        return TexturePaint(texture, Rectangle(width, height))
+        return TexturePaint(texture, Rectangle(texture.width/6, texture.height/6))
     }
 
 }

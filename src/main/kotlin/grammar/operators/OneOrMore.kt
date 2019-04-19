@@ -26,6 +26,22 @@ class OneOrMore(private val rnd: Random) {
         return output
     }
 
+    fun oneOrMore(item: GrammarItem, limit: Int, min:Int, probability: Float): List<GrammarItem> {
+        val output = mutableListOf<GrammarItem>()
+        for (y in 0 until min){
+            output.add(makeNewItem(item))
+        }
+        for (x in 0 until limit-min) {
+            if (rnd.nextFloat() < probability) {
+                output.add(makeNewItem(item))
+            }
+        }
+        if (output.isEmpty()) {
+            output.add(item)
+        }
+        return output
+    }
+
 
     private fun makeNewItem(item: GrammarItem): GrammarItem {
         if(item is Placeholder) return item::class.createInstance()
