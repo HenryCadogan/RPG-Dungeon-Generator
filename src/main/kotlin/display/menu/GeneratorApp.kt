@@ -29,6 +29,7 @@ import java.awt.Desktop
 import java.io.File
 import java.io.IOException
 import javax.imageio.ImageIO
+import kotlin.math.min
 
 
 class GeneratorApp : App() {
@@ -68,7 +69,7 @@ class MainMenu : View("Dungeon Generator Settings") {
     private val sparsityLabel = Label((sparsitySlider.value * 100).toInt().toString())
     private val trappedSlider = Slider(0.0, 1.0, 0.2)
     private val trappedLabel = Label((trappedSlider.value * 100).toInt().toString())
-    private val connectivitySlider = Slider(0.0, 0.5, 0.25)
+    private val connectivitySlider = Slider(0.0, 0.5, 0.15)
     private val connectivityLabel = Label((connectivitySlider.value * 100).toInt().toString())
 
     private val enemiesSlider = Slider(0.0, 1.0, 0.5)
@@ -249,7 +250,7 @@ class MainMenu : View("Dungeon Generator Settings") {
                         )
                         println(constraints)
                         println(saveDirectory.value)
-                        myController.generateMap(constraints, saveDirectory.value,dungeonName.value)
+                        myController.generateMap(constraints, saveDirectory.value, dungeonName.value)
                     }
                 }
                 vboxConstraints {
@@ -269,7 +270,7 @@ class MainMenu : View("Dungeon Generator Settings") {
         roomSparsity.value = sparsitySlider.value
         trappedPercentage.value = trappedSlider.value
         enemySparsity.value = enemiesSlider.value
-        maxEnemiesPerRoom.value = 15
+        maxEnemiesPerRoom.value = 5
         roomSize.value = 100
 
         maxItemsOfLootPerRoom.value = 3
@@ -337,8 +338,9 @@ class MyController : Controller() {
             c.dungeonTheme
         }
         createFactories(Constraints.theme)
-        setRoomConstraints(c.maxRoomCount, c.roomSparsity, c.trappedPercentage, c.roomSize, c.roomConnectivity)
+        setRoomConstraints(c.maxRoomCount, c.minRoomCount, c.roomSparsity, c.trappedPercentage, c.roomSize, c.roomConnectivity)
         setEnemyConstraints(c.maxEnemiesPerRoom, c.enemySparsity)
+        setTreasureConstraints(c.maxContainersPerRoom,c.minContainersPerRoom,c.maxItemsOfLootPerRoom,c.minItemsOfLootPerRoom,c.moneyValuePerPile)
     }
 
 
@@ -350,12 +352,15 @@ class MyController : Controller() {
     }
 
     private fun setRoomConstraints(maxRooms: Int,
+                                   minRooms: Int,
                                    roomSparsity: Float,
                                    trappedPercentage: Float,
                                    maxRoomSize: Int,
                                    connectivity: Int
     ) {
-        Constraints.rooms.maxRoomCount = maxRooms
+        //subtract one as the starting room is always added
+        Constraints.rooms.maxRoomCount = maxRooms-1
+        Constraints.rooms.minRoomCount = minRooms-1
         Constraints.rooms.roomSparsity = roomSparsity
         Constraints.rooms.trappedRoomPercentage = trappedPercentage
         Constraints.rooms.maxRoomSize = maxRoomSize
@@ -365,6 +370,14 @@ class MyController : Controller() {
     private fun setEnemyConstraints(maxEnemiesPerRoom: Int, enemySparsity: Float) {
         Constraints.enemies.maxEnemiesPerRoom = maxEnemiesPerRoom
         Constraints.enemies.enemySparsity = enemySparsity
+    }
+
+    private fun setTreasureConstraints(maxContainers: Int, minContainers: Int, maxLoot: Int, minLoot: Int, moneyValue:MoneyValue) {
+        Constraints.loot.minLootPerRoom = minLoot
+        Constraints.loot.maxLootPerRoom = maxLoot
+        Constraints.containers.minContainersPerRoom = minContainers
+        Constraints.containers.maxContainersPerRoom = maxContainers
+        Constraints.loot.moneyValuePerPile = moneyValue
     }
 }
 

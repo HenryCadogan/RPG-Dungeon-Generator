@@ -9,24 +9,24 @@
     },
     {
       "key": {
-        "simpleName": "Key",
-        "description":"An ornate key"
+        "simpleName": "Key ",
+        "description":"An ornate key. "
       },
       "lock": "The lock is surrounded by an intricate golden relief depicting a dwarf fighting a mighty dragon. "
     },
     {
       "key": {
-        "simpleName": "Key",
-        "description":"A key made entirely from bone"
+        "simpleName": "Key ",
+        "description":"A key made entirely from bone. "
       },
-      "lock": "The lock appears to be made from an animal skull"
+      "lock": "The lock appears to be made from an animal skull. "
     },
     {
       "key": {
-        "simpleName": "Riddle",
-        "description":"Answer to the Riddle: 'insert riddle here'"
+        "simpleName": "Riddle ",
+        "description":"The more you take, the more you leave behind. What am I?\n\nAnswer:\nFootsteps. "
       },
-      "lock": "A 5 letter cryptex"
+      "lock": "A 5 letter cryptex. "
     }
   ]
 }

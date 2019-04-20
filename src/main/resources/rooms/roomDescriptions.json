@@ -8,6 +8,12 @@
         },
         {
           "description": "There are small crustaceans over the walls. "
+        },
+        {
+          "description": "The walls are eroded from water flowing down them over many years. "
+        },
+        {
+          "description": "There are hooks on the walls with poorly made leather waders hanging up to dry. "
         }
       ],
       "floor": [
@@ -16,7 +22,14 @@
         },
         {
           "description": "The floor is sandy and covered in rock pools. "
+        },
+        {
+          "description": "There is a raised area in the centre of the room, upon it is a flattened rock that looks like it has been used as a table. "
+        },
+        {
+          "description": "There is a small stream flowing through this room. The mouth is under one of the walls and crosses the centre of the room before flowing out under the next wall. "
         }
+
       ],
       "ceiling": [
         {
@@ -24,6 +37,12 @@
         },
         {
           "description": "The ceiling in this room is much higher than normal and occasionally drips water onto the floor. These drops give an eerie ambiance to the room. "
+        },
+        {
+          "description": "There are large fish hanging from large metal hooks in the ceiling. "
+        },
+        {
+          "description": "There is a very strong waterfall through the centre of this room. "
         }
       ]
     },
