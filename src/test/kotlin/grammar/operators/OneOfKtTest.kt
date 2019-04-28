@@ -13,6 +13,7 @@ import org.testng.Assert
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
 import theme.Theme
+import java.lang.IllegalArgumentException
 import kotlin.random.Random
 
 
@@ -62,12 +63,44 @@ class OneOfKtTest {
         Assert.assertEquals(result3.first(),itemB)
     }
 
+    @Test
+    fun `if weightings are equal it should pick evenly`(){
+        val itemA = TestItem()
+        val itemB = TestItem()
+        whenever(rnd.nextInt(any(),any())).thenReturn(1)
+        val result1 = ops.oneOf.oneOf(mapOf(itemA to 1,itemB to 1))
+        Assert.assertEquals(result1.size,1)
+        Assert.assertEquals(result1.first(), itemA)
+
+        whenever(rnd.nextInt(any(),any())).thenReturn(2)
+        val result = ops.oneOf.oneOf(mapOf(itemA to 1,itemB to 1))
+        Assert.assertEquals(result.size,1)
+        Assert.assertEquals(result.first(), itemB)
+    }
+
 
     @Test
     fun `it should return the single element if only one is provided`(){
         val itemA = TestItem(false)
         whenever(rnd.nextInt(any(),any())).thenReturn(1)
         val result = ops.oneOf.oneOf(listOf(itemA))
+        Assert.assertEquals(result.size,1)
+        Assert.assertEquals(result.first(),itemA)
+    }
+
+    @Test(expectedExceptions = [IllegalArgumentException::class])
+    fun `it should not allow negative weightings`(){
+        val itemA = TestItem(false)
+        val itemB = TestItem(false)
+        whenever(rnd.nextInt(any(),any())).thenReturn(1)
+        ops.oneOf.oneOf(mapOf(itemA to -1, itemB to -1))
+    }
+
+    @Test
+    fun`it should allow maps with single elements`(){
+        val itemA = TestItem(false)
+        whenever(rnd.nextInt(any(),any())).thenReturn(1)
+        val result = ops.oneOf.oneOf(mapOf(itemA to 1))
         Assert.assertEquals(result.size,1)
         Assert.assertEquals(result.first(),itemA)
     }

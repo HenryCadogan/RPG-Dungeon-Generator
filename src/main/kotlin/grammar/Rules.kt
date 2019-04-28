@@ -16,7 +16,6 @@ import grammar.grammarItems.treasure.money.Money
 import grammar.grammarItems.treasure.money.MoneyValue
 import grammar.operators.GrammarOperators
 import grammar.operators.oneOf
-import grammar.operators.oneOrMore
 import grammar.operators.or
 import kotlin.random.Random
 
@@ -33,7 +32,7 @@ object Rules {
                                 Factories.trappedRoomFactory.terminal() to ((Constraints.rooms.trappedRoomPercentage) * 100).toInt()
                         ))
                     }
-            ),
+                                                                                                                     ),
             ProductionRule(
                     lhs = StartItem::class,
                     rhs = {
@@ -81,7 +80,7 @@ object Rules {
                     //room here to expand into different classes of enemy, maybe boss type enemies
                     lhs = Enemy::class,
                     rhs = {
-                        listOf(Factories.enemyFactory.terminal()) or emptyList()
+                        listOf(Factories.enemyFactory.terminal())
                     }
             )
     )
@@ -96,7 +95,7 @@ object Rules {
             ProductionRule(
                     lhs = MiscItemPlaceholder::class,
                     rhs = {
-                        (Factories.itemFactory.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or emptyList() or Money.moneyFromValue(Constraints.loot.moneyValuePerPile))
+                        (Factories.itemFactory.generateMiscItem(MiscItemCategory.values().toList().oneOf()) or Money.moneyFromValue(Constraints.loot.moneyValuePerPile))
                     }
             )
     )

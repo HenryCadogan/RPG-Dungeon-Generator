@@ -29,7 +29,7 @@ import java.awt.Desktop
 import java.io.File
 import java.io.IOException
 import javax.imageio.ImageIO
-import kotlin.math.min
+
 
 
 class GeneratorApp : App() {
@@ -382,9 +382,11 @@ class MyController : Controller() {
 }
 
 
-fun main() {
+
+fun main(args: Array<String>) {
     launch<GeneratorApp>()
 }
+
 
 data class DungeonConstraints(
         val maxRoomCount: Int,

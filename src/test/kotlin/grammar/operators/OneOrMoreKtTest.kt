@@ -53,4 +53,47 @@ class OneOrMoreKtTest{
         Assert.assertTrue(output.size<2)
     }
 
+    @Test(expectedExceptions = [IllegalArgumentException::class])
+    fun`it should not allow the limit to be negative`(){
+        val item = TestItem(false)
+        whenever(rnd.nextFloat()).thenReturn(1f)
+        operators.oneOrMore.oneOrMore(item,-1,1f)
+    }
+
+    @Test(expectedExceptions = [IllegalArgumentException::class])
+    fun`it should not allow the limit to be less than min`(){
+        val item = TestItem(false)
+        whenever(rnd.nextFloat()).thenReturn(1f)
+        operators.oneOrMore.oneOrMore(item,1,2,1f)
+    }
+
+    @Test(expectedExceptions = [IllegalArgumentException::class])
+    fun`it should not allow the min to be negative`(){
+        val item = TestItem(false)
+        whenever(rnd.nextFloat()).thenReturn(1f)
+        operators.oneOrMore.oneOrMore(item,1, -1,1f)
+    }
+
+    @Test(expectedExceptions = [IllegalArgumentException::class])
+    fun`it should not allow the probability to less than 0`(){
+        val item = TestItem(false)
+        whenever(rnd.nextFloat()).thenReturn(1f)
+        operators.oneOrMore.oneOrMore(item,1,-0.1f)
+    }
+
+    @Test(expectedExceptions = [IllegalArgumentException::class])
+    fun`it should not allow the probability to be equal to 0`(){
+        val item = TestItem(false)
+        whenever(rnd.nextFloat()).thenReturn(1f)
+        operators.oneOrMore.oneOrMore(item,1,0f)
+    }
+
+    @Test(expectedExceptions = [IllegalArgumentException::class])
+    fun`it should not allow the probability to be greater than 1`(){
+        val item = TestItem(false)
+        whenever(rnd.nextFloat()).thenReturn(1f)
+        operators.oneOrMore.oneOrMore(item,1,10f)
+    }
+
+
 }

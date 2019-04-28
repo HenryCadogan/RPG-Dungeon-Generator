@@ -2,7 +2,6 @@ package grammar.operators
 
 import grammar.grammarItems.GrammarItem
 import kotlin.random.Random
-import kotlin.reflect.KClass
 
 
 class OneOf(private val rnd: Random) {
@@ -16,6 +15,9 @@ class OneOf(private val rnd: Random) {
     }
 
     fun <T> oneOf(items: Map<T, Int>): List<T> {
+        if (items.values.any { it < 0 }) {
+            throw IllegalArgumentException("Weight cannot be negative")
+        }
         if (items.size == 1) return listOf(items.keys.first())
         val sortedItems = items.toList().sortedBy { (_, value) -> value }.toMap()
         val keys = sortedItems.keys.toList()
@@ -30,18 +32,19 @@ class OneOf(private val rnd: Random) {
     }
 }
 
-infix fun GrammarItem.or(item:GrammarItem):List<GrammarItem>{
+infix fun GrammarItem.or(item: GrammarItem): List<GrammarItem> {
     return OneOf(Random).oneOf(this, item)
 }
-infix fun List<GrammarItem>.or(item:List<GrammarItem>):List<GrammarItem>{
+
+infix fun List<GrammarItem>.or(item: List<GrammarItem>): List<GrammarItem> {
     return OneOf(Random).oneOf(this, item).flatten()
 }
 
-infix fun List<GrammarItem>.or(item:GrammarItem):List<GrammarItem>{
+infix fun List<GrammarItem>.or(item: GrammarItem): List<GrammarItem> {
     return OneOf(Random).oneOf(this, listOf(item)).flatten()
 }
 
-infix fun GrammarItem.or(item:List<GrammarItem>):List<GrammarItem>{
+infix fun GrammarItem.or(item: List<GrammarItem>): List<GrammarItem> {
     return OneOf(Random).oneOf(listOf(this), item).flatten()
 }
 

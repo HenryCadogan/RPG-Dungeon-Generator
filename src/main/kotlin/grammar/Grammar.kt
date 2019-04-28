@@ -43,26 +43,4 @@ class Grammar(private val rules: List<ProductionRule>) {
 class RuleNotFoundException(clazz: KClass<out GrammarItem>) : RuntimeException("Could not get a rule for $clazz")
 
 
-fun main(args: Array<String>) {
-//    println("Starting")
-//    val rnd = Random
-//    Constraints.theme = Theme.AQUATIC
-//    Factories.enemyFactory = EnemyFactory(Constraints.theme)
-//    Factories.itemFactory = ItemsFactory(rnd)
-//    Factories.trappedRoomFactory = TrappedRoomFactory()
-//    Factories.roomFactory = DungeonRoomFactory(Constraints.theme)
-//    Constraints.rooms.maxRoomCount = 15
-//    Constraints.rooms.roomSparsity = 0.5f
-//    Constraints.rooms.connectivityThreshold = 30
-//    Constraints.rooms.trappedRoomPercentage = 20
-//    Constraints.enemies.maxEnemiesPerRoom = 5
-//    Constraints.enemies.enemySparsity = 0.2f
-    val dungeon = Dungeon()
-    //must call generate before calling draw or things will go wrong due to lateinit vars
-    val output = dungeon.generate()
-    ImageIO.write(dungeon.draw(),"png",File("generator.Dungeon.png"))
-    println(output)
-    //todo make function to write out description of a grammar item (could be railrec)
-}
-
 

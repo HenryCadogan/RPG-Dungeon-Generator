@@ -38,6 +38,6 @@ dependencies {
 }
 
 jar {
-    manifest { attributes 'Main-Class': 'generator.Dungeon' }
+    manifest { attributes 'Main-Class': 'display.menu.GeneratorApp' }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
